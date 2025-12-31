@@ -1,0 +1,13 @@
+@use "../../base/variables/variables.scss" as *;
+
+header{
+    background-color: $header-footer-color;
+    margin: 0;
+    border-bottom: solid 2px $border-color;
+    margin-bottom: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}

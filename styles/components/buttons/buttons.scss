@@ -1,0 +1,10 @@
+@use "../../base/variables/variables.scss" as *;
+
+.tableButton{
+    color: $text-color;
+    border: solid 1px $border-color;
+    background-color: $second-main-color;
+    border-radius: $border-radius;
+    width: 40px;
+    height: 40px;
+}
