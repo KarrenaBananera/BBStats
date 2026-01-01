@@ -1,0 +1,254 @@
+[
+    {
+        "img":"https://www.dustloop.com/wiki/images/8/86/BBCF_Amane_Nishiki_Icon.png",
+        "name": "Amane",
+        "frequency": 8.3,
+        "matches": 892,
+        "winrate": 51.2
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/d/df/BBCF_Arakune_Icon.png",
+        "name": "Arakune",
+        "frequency": 6.7,
+        "matches": 756,
+        "winrate": 45.8
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/7/71/BBCF_Azrael_Icon.png",
+        "name": "Azrael",
+        "frequency": 9.1,
+        "matches": 1043,
+        "winrate": 52.3
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/a/a5/BBCF_Bang_Shishigami_Icon.png",
+        "name": "Bang",
+        "frequency": 7.4,
+        "matches": 834,
+        "winrate": 47.9
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/17/BBCF_Bullet_Icon.png",
+        "name": "Bullet",
+        "frequency": 10.2,
+        "matches": 1167,
+        "winrate": 50.1
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/1f/BBCF_Carl_Clover_Icon.png",
+        "name": "Carl",
+        "frequency": 5.9,
+        "matches": 612,
+        "winrate": 46.5
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/a/a1/BBCF_Celica_A._Mercury_Icon.png",
+        "name": "Celica",
+        "frequency": 11.3,
+        "matches": 1289,
+        "winrate": 49.7
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/a/a1/BBCF_Es_Icon.png",
+        "name": "Es",
+        "frequency": 13.2,
+        "matches": 1456,
+        "winrate": 51.8
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/4/4a/BBCF_Hakumen_Icon.png",
+        "name": "Hakumen",
+        "frequency": 6.8,
+        "matches": 789,
+        "winrate": 48.2
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/d/db/BBCF_Hazama_Icon.png",
+        "name": "Hazama",
+        "frequency": 10.5,
+        "matches": 1201,
+        "winrate": 52.6
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/f/fb/BBCF_Hibiki_Kohaku_Icon.png",
+        "name": "Hibiki",
+        "frequency": 7.9,
+        "matches": 912,
+        "winrate": 49.4
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/13/BBCF_Izanami_Icon.png",
+        "name": "Izanami",
+        "frequency": 8.6,
+        "matches": 978,
+        "winrate": 50.9
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/f/f2/BBCF_Izayoi_Icon.png",
+        "name": "Izayoi",
+        "frequency": 6.2,
+        "matches": 701,
+        "winrate": 47.3
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/1e/BBCF_Jin_Kisaragi_Icon.png",
+        "name": "Jin",
+        "frequency": 11.8,
+        "matches": 1324,
+        "winrate": 50.5
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/63/BBCF_Jubei_Icon.png",
+        "name": "Jubei",
+        "frequency": 9.4,
+        "matches": 1089,
+        "winrate": 51.2
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/7/72/BBCF_Kagura_Mutsuki_Icon.png",
+        "name": "Kagura",
+        "frequency": 7.1,
+        "matches": 823,
+        "winrate": 48.8
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/2/2b/BBCF_Kokonoe_Icon.png",
+        "name": "Kokonoe",
+        "frequency": 6.5,
+        "matches": 745,
+        "winrate": 46.9
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/2/28/BBCF_Lambda-11_Icon.png",
+        "name": "Lambda-11",
+        "frequency": 8.1,
+        "matches": 934,
+        "winrate": 49.8
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/e/ed/BBCF_Litchi_Faye_Ling_Icon.png",
+        "name": "Litchi",
+        "frequency": 9.7,
+        "matches": 1123,
+        "winrate": 51.5
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/a/a2/BBCF_Mai_Natsume_Icon.png",
+        "name": "Mai",
+        "frequency": 10.8,
+        "matches": 1267,
+        "winrate": 50.3
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/6a/BBCF_Makoto_Nanaya_Icon.png",
+        "name": "Makoto",
+        "frequency": 12.1,
+        "matches": 1398,
+        "winrate": 52.1
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/b/b1/BBCF_Mu-12_Icon.png",
+        "name": "Mu-12",
+        "frequency": 7.3,
+        "matches": 856,
+        "winrate": 48.6
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/2/2e/BBCF_Naoto_Kurogane_Icon.png",
+        "name": "Naoto",
+        "frequency": 8.9,
+        "matches": 1045,
+        "winrate": 50.7
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/1f/BBCF_Nine_the_Phantom_Icon.png",
+        "name": "Nine",
+        "frequency": 5.4,
+        "matches": 623,
+        "winrate": 45.2
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/e/e8/BBCF_Noel_Vermillion_Icon.png",
+        "name": "Noel",
+        "frequency": 13.7,
+        "matches": 1567,
+        "winrate": 51.4
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/10/BBCF_Nu-13_Icon.png",
+        "name": "Nu-13",
+        "frequency": 6.3,
+        "matches": 723,
+        "winrate": 46.8
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/d/da/BBCF_Platinum_the_Trinity_Icon.png",
+        "name": "Platinum",
+        "frequency": 8.4,
+        "matches": 967,
+        "winrate": 49.1
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/63/BBCF_Rachel_Alucard_Icon.png",
+        "name": "Rachel",
+        "frequency": 10.1,
+        "matches": 1156,
+        "winrate": 50.9
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/1/1a/BBCF_Ragna_the_Bloodedge_Icon.png",
+        "name": "Ragna",
+        "frequency": 14.2,
+        "matches": 1623,
+        "winrate": 52.4
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/7/73/BBCF_Relius_Clover_Icon.png",
+        "name": "Relius",
+        "frequency": 7.6,
+        "matches": 889,
+        "winrate": 49.3
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/64/BBCF_Susano'o_Icon.png",
+        "name": "Susano'o",
+        "frequency": 6.9,
+        "matches": 812,
+        "winrate": 47.6
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/6c/BBCF_Iron_Tager_Icon.png",
+        "name": "Tager",
+        "frequency": 9.8,
+        "matches": 1134,
+        "winrate": 51.7
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/8/80/BBCF_Taokaka_Icon.png",
+        "name": "Taokaka",
+        "frequency": 11.6,
+        "matches": 1289,
+        "winrate": 50.2
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/e/ee/BBCF_Yuuki_Terumi_Icon.png",
+        "name": "Terumi",
+        "frequency": 10.3,
+        "matches": 1187,
+        "winrate": 51.9
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/67/BBCF_Tsubaki_Yayoi_Icon.png",
+        "name": "Tsubaki",
+        "frequency": 8.7,
+        "matches": 1001,
+        "winrate": 50.6
+    },
+    {
+        "img":"https://www.dustloop.com/wiki/images/6/68/BBCF_Valkenhayn_R._Hellsing_Icon.png",
+        "name": "Valkenhayn",
+        "frequency": 12.5,
+        "matches": 1235,
+        "winrate": 48.5
+    }
+]

@@ -1,20 +1,16 @@
-const characters = [
-    {
-        img:"https://www.dustloop.com/wiki/images/6/68/BBCF_Valkenhayn_R._Hellsing_Icon.png",
-        name: "Valkenhayn",
-        frequency: 12.5,
-        matches: 1235,
-        winrate: 48.5
-    }
-]
-
-
-function fill() {
-    const matchupContainer = document.getElementById("matchup-container");
     
 
+async function fill() {
+    const chars_json = await fetch('../tager_matchups.json');
+    const characters = await chars_json.json();
+
+    const matchupContainer = document.getElementById("matchup-container");
+
+    console.log("Hi");
+    console.log(characters);
+
     for(let i = 0; i < 35; i++){
-        const character = characters[0];
+        const character = characters[i];
         let text;
 
         if(character.winrate < 45)
@@ -37,15 +33,15 @@ function fill() {
                     </div>
                     <div class="matchup-stats">
                         <div class="mainDiv-stat-item">
-                            <div class="stat-label">Частота матчапа</div>
+                            <div class="stat-label">Matchup frequency</div>
                             <div class="stat-value">${character.frequency}%</div>
                         </div>
                         <div class="mainDiv-stat-item">
-                            <div class="stat-label">Матчи</div>
+                            <div class="stat-label">Matches</div>
                             <div class="stat-value">${character.matches}</div>
                         </div>
                         <div class="mainDiv-stat-item">
-                            <div class="stat-label">Винрейт</div>
+                            <div class="stat-label">Winrate</div>
                             <div class="stat-value ${text}">${character.winrate}%</div>
                         </div>
                     </div>
