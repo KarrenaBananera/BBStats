@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlaseBlueStats</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <title>BlazBlueStats</title>
 </head>
 <body>
     <header>
@@ -107,45 +108,130 @@
                 </svg>
             </a>
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-3 justify-content-center mb-md-0">
-                <li><a href="top.html">Топ</a></li>
-                <li><a href="char.html">Статистика</a></li>
+                <li><a href="top.html">Top</a></li>
+                <li><a href="char.html">Statistics</a></li>
             </ul>
-            <form class="mb-0 me-3 mb-lg-0 me-lg-3" role="search">
+            <form class="col-6 col-lg-auto mb-0 me-3 mb-lg-0 me-lg-3" role="search">
                 <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
             </form>
 
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Войти</button>
+                <button type="button" class="btn btn-outline-light me-2">Login</button>
             </div>
 
         </nav>
     </header>
-
     <div class="mainDiv container py-4">
-        <table>
-            <thead>
-                <tr>
-                    <th class="left">#</th>
-                    <th class="left">Игрок</th>
-                    <th class="right">Персонаж</th>
-                    <th class="right">Рейтинг</th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-               
-            </tbody>
-        </table>
-        <div class="pagination-container">
-            <button id="prevPage" class="tableButton" onclick="Prev()">
-                <
-            </button>
-            
-            <span id="pageInfo" class="page-info mx-4">1</span>
-            
-            <button id="nextPage" class="tableButton" onclick="Next()">
-                >
-            </button>
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+            <h1 class="text-white mb-4">Welcome to BB Stats</h1>
+            <p class="text-white-50 lead">Player statistics and ratings in BlazBlue</p>
+            </div>
         </div>
+
+
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="text-white mb-4 text-center">Upcoming Tournaments</h2>
+                <div id="upcomingTournaments" class="carousel slide col-10" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <a href="tournament-details.html" class="tournament-link">
+                            <div class="tournament-card">
+                                <img src="../photo_2025-11-28_13-40-16.jpg" class="d-block w-100" alt="Tournament 1">
+                                <div class="tournament-info">
+                                <h4>BlazBlue Cup 2024</h4>
+                                <p>December 15, 2024</p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="tournament-details.html" class="tournament-link">
+                                <div class="tournament-card">
+                                    <img src="../photo_2025-11-28_13-40-16.jpg" class="d-block w-100" alt="Tournament 2">
+                                    <div class="tournament-info">
+                                    <h4>Winter Showdown</h4>
+                                    <p>January 20, 2025</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="tournament-details.html" class="tournament-link">
+                            <div class="tournament-card">
+                                <img src="../photo_2025-11-28_13-40-16.jpg" class="d-block w-100" alt="Tournament 3">
+                                <div class="tournament-info">
+                                <h4>Spring Championship</h4>
+                                <p>March 15, 2025</p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev d-md-flex" type="button" data-bs-target="#upcomingTournaments" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next d-md-flex" type="button" data-bs-target="#upcomingTournaments" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-white text-center mb-4">Past Tournaments</h2>
+                <div id="pastTournaments" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <a href="tournament-details.html" class="tournament-link">
+                                <div class="tournament-card">
+                                    <img src="../photo_2025-11-28_13-40-16.jpg" class="d-block w-100" alt="Past Tournament 1">
+                                    <div class="tournament-info">
+                                        <h4>Autumn Battle 2024</h4>
+                                        <p>October 10, 2024</p>
+                                        <span class="tournament-winner">Winner: Player123</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="tournament-details.html" class="tournament-link">
+                                <div class="tournament-card">
+                                    <img src="../photo_2025-11-28_13-40-16.jpg" class="d-block w-100" alt="Past Tournament 2">
+                                    <div class="tournament-info">
+                                        <h4>Summer Slam</h4>
+                                        <p>August 15, 2024</p>
+                                        <span class="tournament-winner">Winner: BB_Master</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="tournament-details.html" class="tournament-link">
+                                <div class="tournament-card">
+                                    <img src="../photo_2025-11-28_13-40-16.jpg" class="d-block w-100" alt="Past Tournament 3">
+                                    <div class="tournament-info">
+                                        <h4>Spring Invitational</h4>
+                                        <p>May 20, 2024</p>
+                                        <span class="tournament-winner">Winner: RagnaPlayer</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev d-md-flex" type="button" data-bs-target="#pastTournaments" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <footer>
@@ -161,11 +247,11 @@
         </div>
         
         <div class="div-container">
-            <a href="#" class="footer-link">О сайте</a>
+            <a href="#" class="footer-link">About Us</a>
         </div>
 
         <div class="div-container mb-3">
-            <a href="#" class="footer-link">Политика конфиденциальности</a>
+            <a href="#" class="footer-link">Privacy Policy</a>
         </div>
         
         <div class="div-container">
@@ -174,9 +260,6 @@
 
     </footer>
 
-    <script src="../scripts/topScript.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
-
-
 </html>
