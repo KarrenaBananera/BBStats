@@ -26,7 +26,6 @@ public class AppDbContext : DbContext
 		{
 			entity.HasKey(u => new { u.PlayerId, u.CharacterId });
 
-			entity.Property(u => u.CurrentRating).HasDefaultValue(1000);
 			entity.Property(u => u.MaxRating).HasDefaultValue(1000);
 
 			entity.HasOne(u => u.Player)
