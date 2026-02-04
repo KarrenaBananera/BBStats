@@ -9,7 +9,7 @@ public class GamesFetcherClient
 	private HttpContent _postContent;
 	public GamesFetcherClient(HttpClient httpClient)
 	{
-		_requestString = File.ReadAllText("RequestString.txt");
+		_requestString = File.ReadAllText("Services/RequestString.txt");
 		_httpClient = httpClient;
 		_postContent = new StringContent(_requestString, Encoding.UTF8, "application/json");
 	}
