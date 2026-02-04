@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IGamesParser, FilteredGamesParser>();
+builder.Services.AddTransient<IGamesRepository,GameRepository>();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
