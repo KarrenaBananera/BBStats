@@ -6,7 +6,7 @@ public static class Glicko2Calculator
 	private const double TAU = 0.5;
 	private const double EPSILON = 0.000001;
 
-	public static (Rating, Rating) CalculateRating(Rating playerA, Rating playerB, bool isPlayerAWin)
+	public static (Rating playerA, Rating playerB) CalculateRating(Rating playerA, Rating playerB, bool isPlayerAWin)
 	{
 		// Convert to Glicko-2 scale
 		double muA = (playerA.CurrentRating - 1500) / 173.7178;
@@ -37,6 +37,16 @@ public static class Glicko2Calculator
 				newPhiB * 173.7178,
 				newSigmaB
 			)
+		);
+	}
+	public static Rating GetDefaultRating(double? customRating = null,
+										  double? customDeviation = null,
+										  double? customVolatility = null)
+	{
+		return new Rating(
+			CurrentRating: customRating ?? 1500,
+			RatingDeviation: customDeviation ?? 350,
+			Volatility: customVolatility ?? 0.06
 		);
 	}
 
