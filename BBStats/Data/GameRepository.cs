@@ -29,10 +29,11 @@ public class GameRepository : IGamesRepository
 		var playerB =  UpdateOrCreatePlayerAsync(game.PlayerBId, game.PlayerB);
 
 
-		var characterStatA =  GetOrCreatePlayerCharacterStat(game.PlayerAId, game.CharacterAId);
-		var characterStatB =  GetOrCreatePlayerCharacterStat(game.PlayerBId, game.CharacterBId);
+		var characterStatA =  await GetOrCreatePlayerCharacterStat(game.PlayerAId, game.CharacterAId);
+		var characterStatB =  await GetOrCreatePlayerCharacterStat(game.PlayerBId, game.CharacterBId);
 
-		await RecordPlayerGame(await characterStatA, await characterStatB, gameInDb);
+		await RecordPlayerGame( characterStatA, characterStatB, gameInDb);
+		await _dbContext.SaveChangesAsync();
 		await _dbContext.Database.CommitTransactionAsync();
 
 		return true;
@@ -79,10 +80,9 @@ public class GameRepository : IGamesRepository
 	}
 	private async Task UpdateMatchupAsync(GameDTO game)
 	{
-		var fixedFormatGame = game;
 		if (game.CharacterAId > game.CharacterBId)
 		{
-			fixedFormatGame = game with
+			game = game with
 			{
 				CharacterAId = game.CharacterBId,
 				CharacterBId = game.CharacterAId,
@@ -99,11 +99,12 @@ public class GameRepository : IGamesRepository
 			matchupDb.CharacterAId = game.CharacterAId;
 			matchupDb.CharacterBId = game.CharacterBId;
 			await _dbContext.Matchups.AddAsync(matchupDb);
+			await _dbContext.SaveChangesAsync();
 		}
 
 		matchupDb.TotalGames++;
 
-		if (fixedFormatGame.IsPlayerAWin)
+		if (game.IsPlayerAWin)
 			matchupDb.WinsA++;
 		else
 			matchupDb.WinsB++;
@@ -158,7 +159,8 @@ public class GameRepository : IGamesRepository
 			PlayerId = characterStatA.PlayerId,
 			GameId = game.Id,
 			EloBefore = oldRatingA.CurrentRating,
-			EloAfter = characterStatA.PlayerRating.CurrentRating
+			EloAfter = characterStatA.PlayerRating.CurrentRating,
+			Game = game
 		};
 
 		var playerBGame = new PlayerGame()
@@ -166,7 +168,8 @@ public class GameRepository : IGamesRepository
 			PlayerId = characterStatB.PlayerId,
 			GameId = game.Id,
 			EloBefore = oldRatingB.CurrentRating,
-			EloAfter = characterStatB.PlayerRating.CurrentRating
+			EloAfter = characterStatB.PlayerRating.CurrentRating,
+			Game = game
 		};
 
 		await _dbContext.PlayersGames.AddAsync(playerBGame);
