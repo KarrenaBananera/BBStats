@@ -4,31 +4,31 @@ namespace BBStats.Services;
 
 public class GamesProcessingService : BackgroundService
 {
-	private readonly IGamesParser _parser;
-	private readonly GamesFetcherClient _client;
-	private readonly IGamesRepository _repository;
+	private readonly IServiceScopeFactory _scopeFactory;
 
-	public GamesProcessingService(IGamesParser parser, 
-		GamesFetcherClient client, IGamesRepository repository)
+	public GamesProcessingService(IServiceScopeFactory scopeFactory)
 	{
-		_parser = parser;
-		_client = client;
-		_repository = repository;
+		_scopeFactory = scopeFactory;
 	}
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			var unparsedGames = await _client.GetGames();
-
-			var games = _parser.Parse(unparsedGames).OrderBy(x => x.PlayedAt);
-
-			foreach (var game in games)
+			using (var scope = _scopeFactory.CreateScope())
 			{
-				_repository.AddGame(game);
-			}
+				var client = scope.ServiceProvider.GetRequiredService<GamesFetcherClient>();
+				var parser = scope.ServiceProvider.GetRequiredService<IGamesParser>();
+				var repositroy = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
+				var unparsedGames = await client.GetGames();
 
+				var games = parser.Parse(unparsedGames).OrderBy(x => x.PlayedAt);
+
+				foreach (var game in games)
+				{
+					await repositroy.AddGameAsync(game);
+				}
+			}
 			await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
 		}
 	}
