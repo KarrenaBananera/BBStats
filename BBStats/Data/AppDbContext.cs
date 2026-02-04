@@ -37,6 +37,8 @@ public class AppDbContext : DbContext
 					.WithMany()
 					.HasForeignKey(u => u.CharacterId)
 					.OnDelete(DeleteBehavior.Cascade);
+
+			entity.OwnsOne(x => x.PlayerRating);
 		});
 
 		modelBuilder.Entity<Matchup>(entity =>
