@@ -285,7 +285,7 @@ namespace BBStats.Migrations
 
                     b.ToTable("Matchups", t =>
                         {
-                            t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" < \"CharacterBId\"");
+                            t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" <= \"CharacterBId\"");
                         });
                 });
 
@@ -453,11 +453,19 @@ namespace BBStats.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BBStats.Data.Entites.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BBStats.Data.Entites.PlayerCharacterStat", null)
                         .WithMany("Games")
                         .HasForeignKey("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
 
                     b.Navigation("Game");
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("BBStats.Data.Entites.Player", b =>

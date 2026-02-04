@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BBStats.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260128201636_inital")]
-    partial class inital
+    [Migration("20260204225206_base")]
+    partial class @base
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,7 +94,7 @@ namespace BBStats.Migrations
                         new
                         {
                             Id = 12,
-                            Name = "Nu-13"
+                            Name = "Nu"
                         },
                         new
                         {
@@ -109,7 +109,7 @@ namespace BBStats.Migrations
                         new
                         {
                             Id = 15,
-                            Name = "Mu-12"
+                            Name = "Mu"
                         },
                         new
                         {
@@ -199,7 +199,7 @@ namespace BBStats.Migrations
                         new
                         {
                             Id = 33,
-                            Name = "Susano'o"
+                            Name = "Susanoo"
                         },
                         new
                         {
@@ -224,6 +224,12 @@ namespace BBStats.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CharacterAId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CharacterBId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("GameUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -231,7 +237,7 @@ namespace BBStats.Migrations
                     b.Property<bool>("IsPlayerAWin")
                         .HasColumnType("INTEGER");
 
-                    b.Property<TimeSpan>("PlayedAt")
+                    b.Property<DateTime>("PlayedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PlayerA")
@@ -251,6 +257,10 @@ namespace BBStats.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CharacterAId");
+
+                    b.HasIndex("CharacterBId");
 
                     b.ToTable("Games");
                 });
@@ -278,7 +288,7 @@ namespace BBStats.Migrations
 
                     b.ToTable("Matchups", t =>
                         {
-                            t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" < \"CharacterBId\"");
+                            t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" <= \"CharacterBId\"");
                         });
                 });
 
@@ -306,18 +316,13 @@ namespace BBStats.Migrations
                     b.Property<int>("CharacterId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CurrentElo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(1000);
-
                     b.Property<int>("Losses")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MaxElo")
+                    b.Property<double>("MaxRating")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(1000);
+                        .HasColumnType("REAL")
+                        .HasDefaultValue(1000.0);
 
                     b.Property<int>("Wins")
                         .HasColumnType("INTEGER");
@@ -337,11 +342,11 @@ namespace BBStats.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("EloAfter")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("EloAfter")
+                        .HasColumnType("REAL");
 
-                    b.Property<int>("EloBefore")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("EloBefore")
+                        .HasColumnType("REAL");
 
                     b.Property<int?>("PlayerCharacterStatCharacterId")
                         .HasColumnType("INTEGER");
@@ -351,9 +356,30 @@ namespace BBStats.Migrations
 
                     b.HasKey("PlayerId", "GameId");
 
+                    b.HasIndex("GameId");
+
                     b.HasIndex("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
 
                     b.ToTable("PlayersGames");
+                });
+
+            modelBuilder.Entity("BBStats.Data.Entites.Game", b =>
+                {
+                    b.HasOne("BBStats.Data.Entites.Character", "CharacterA")
+                        .WithMany()
+                        .HasForeignKey("CharacterAId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BBStats.Data.Entites.Character", "CharacterB")
+                        .WithMany()
+                        .HasForeignKey("CharacterBId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CharacterA");
+
+                    b.Navigation("CharacterB");
                 });
 
             modelBuilder.Entity("BBStats.Data.Entites.Matchup", b =>
@@ -389,16 +415,60 @@ namespace BBStats.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("BBStats.Data.Rating", "PlayerRating", b1 =>
+                        {
+                            b1.Property<long>("PlayerCharacterStatPlayerId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<int>("PlayerCharacterStatCharacterId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<double>("CurrentRating")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("RatingDeviation")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("Volatility")
+                                .HasColumnType("REAL");
+
+                            b1.HasKey("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
+
+                            b1.ToTable("PlayersCharactersStats");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
+                        });
+
                     b.Navigation("Character");
 
                     b.Navigation("Player");
+
+                    b.Navigation("PlayerRating")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BBStats.Data.Entites.PlayerGame", b =>
                 {
+                    b.HasOne("BBStats.Data.Entites.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BBStats.Data.Entites.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BBStats.Data.Entites.PlayerCharacterStat", null)
                         .WithMany("Games")
                         .HasForeignKey("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("BBStats.Data.Entites.Player", b =>
