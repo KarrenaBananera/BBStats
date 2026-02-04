@@ -6,4 +6,5 @@ public class PlayerGame
 	public Int64 PlayerId { get; set; }
 	public int EloBefore { get; set; }
 	public int EloAfter { get; set; }
+	public Game Game { get; set; }
 }

@@ -50,6 +50,10 @@ public class AppDbContext : DbContext
 		modelBuilder.Entity<PlayerGame>(entity =>
 		{
 			entity.HasKey(u => new { u.PlayerId, u.GameId });
+
+			entity.HasOne(p => p.Game)
+			.WithMany()
+			.HasForeignKey(p => p.GameId);
 		});
 	}
 }	
