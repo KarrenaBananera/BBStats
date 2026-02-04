@@ -4,5 +4,6 @@ namespace BBStats.Data;
 
 public interface IGamesRepository
 {
-	public void AddGame(GameDTO game);
+	public Task<bool> AddGameAsync(GameDTO game);
+
 }
