@@ -7,4 +7,5 @@ public class PlayerGame
 	public double EloBefore { get; set; }
 	public double EloAfter { get; set; }
 	public Game Game { get; set; }
+	public Player Player { get; set; }
 }

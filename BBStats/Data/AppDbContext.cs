@@ -46,7 +46,7 @@ public class AppDbContext : DbContext
 			entity.HasKey(u => new { u.CharacterAId, u.CharacterBId });
 			entity.ToTable(t =>
 			t.HasCheckConstraint("CharacterOrder",
-				"\"CharacterAId\" < \"CharacterBId\""));
+				"\"CharacterAId\" <= \"CharacterBId\""));
 		});
 
 		modelBuilder.Entity<PlayerGame>(entity =>
@@ -56,6 +56,10 @@ public class AppDbContext : DbContext
 			entity.HasOne(p => p.Game)
 			.WithMany()
 			.HasForeignKey(p => p.GameId);
+
+			entity.HasOne(x => x.Player)
+			.WithMany()
+			.HasForeignKey(x => x.PlayerId);
 		});
 	}
 }	
