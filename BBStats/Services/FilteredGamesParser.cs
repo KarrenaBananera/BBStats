@@ -22,7 +22,7 @@ public class FilteredGamesParser : IGamesParser
 		return result;
 	}
 
-	private FilteredGamesParser()
+	public FilteredGamesParser()
 	{
 		var timer = new System.Timers.Timer(50000);
 		timer.Elapsed += (_,_) => Cleanup();
