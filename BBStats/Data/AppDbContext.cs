@@ -64,6 +64,10 @@ public class AppDbContext : DbContext
 			entity.HasOne(x => x.Player)
 			.WithMany()
 			.HasForeignKey(x => x.PlayerId);
+
+			entity.HasOne(p => p.PlayerCharacterStat)
+			.WithMany()
+			.HasForeignKey(x => new { x.PlayerId, x.CharacterId });
 		});
 	}
 }	

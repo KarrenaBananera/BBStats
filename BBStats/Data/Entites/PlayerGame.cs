@@ -10,4 +10,5 @@ public class PlayerGame
 	public Game Game { get; set; }
 	public Player Player { get; set; }
 	public Character Character { get; set; }
+	public PlayerCharacterStat PlayerCharacterStat { get; set; }
 }
