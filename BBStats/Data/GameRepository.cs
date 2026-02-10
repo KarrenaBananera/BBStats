@@ -158,6 +158,7 @@ public class GameRepository : IGamesRepository
 		{
 			PlayerId = characterStatA.PlayerId,
 			GameId = game.Id,
+			CharacterId = characterStatA.CharacterId,
 			EloBefore = oldRatingA.CurrentRating,
 			EloAfter = characterStatA.PlayerRating.CurrentRating,
 			Game = game
@@ -167,6 +168,7 @@ public class GameRepository : IGamesRepository
 		{
 			PlayerId = characterStatB.PlayerId,
 			GameId = game.Id,
+			CharacterId = characterStatB.CharacterId,
 			EloBefore = oldRatingB.CurrentRating,
 			EloAfter = characterStatB.PlayerRating.CurrentRating,
 			Game = game
