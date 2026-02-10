@@ -59,7 +59,7 @@ public class AppDbContext : DbContext
 
 			entity.HasOne(p => p.Character)
 			.WithMany()
-			.HasForeignKey(p => p.GameId);
+			.HasForeignKey(p => p.CharacterId);
 
 			entity.HasOne(x => x.Player)
 			.WithMany()
