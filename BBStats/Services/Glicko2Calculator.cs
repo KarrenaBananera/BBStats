@@ -45,8 +45,8 @@ public static class Glicko2Calculator
 	{
 		return new Rating(
 			CurrentRating: customRating ?? 1500,
-			RatingDeviation: customDeviation ?? 350,
-			Volatility: customVolatility ?? 0.06
+			RatingDeviation: customDeviation ?? 125,
+			Volatility: customVolatility ?? 0.075
 		);
 	}
 
