@@ -25,7 +25,6 @@ public class AppDbContext : DbContext
 		modelBuilder.Entity<PlayerCharacterStat>(entity =>
 		{
 			entity.HasKey(u => new { u.PlayerId, u.CharacterId });
-
 			entity.Property(u => u.MaxRating).HasDefaultValue(1000);
 
 			entity.HasOne(u => u.Player)
@@ -34,9 +33,14 @@ public class AppDbContext : DbContext
 				  .OnDelete(DeleteBehavior.Cascade);
 
 			entity.HasOne(u => u.Character)
-					.WithMany()
-					.HasForeignKey(u => u.CharacterId)
-					.OnDelete(DeleteBehavior.Cascade);
+				  .WithMany() 
+				  .HasForeignKey(u => u.CharacterId)
+				  .OnDelete(DeleteBehavior.Cascade);
+
+			//entity.HasMany(ps => ps.Games)
+			//	  .WithOne(pg => pg.CharacterStat)  
+			//	  .HasForeignKey(pg => new { pg.PlayerId, pg.CharacterId })
+			//	  .HasPrincipalKey(ps => new { ps.PlayerId, ps.CharacterId });
 
 			entity.OwnsOne(x => x.PlayerRating);
 		});
@@ -45,8 +49,7 @@ public class AppDbContext : DbContext
 		{
 			entity.HasKey(u => new { u.CharacterAId, u.CharacterBId });
 			entity.ToTable(t =>
-			t.HasCheckConstraint("CharacterOrder",
-				"\"CharacterAId\" <= \"CharacterBId\""));
+				t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" <= \"CharacterBId\""));
 		});
 
 		modelBuilder.Entity<PlayerGame>(entity =>
@@ -54,20 +57,17 @@ public class AppDbContext : DbContext
 			entity.HasKey(u => new { u.PlayerId, u.GameId, u.CharacterId });
 
 			entity.HasOne(p => p.Game)
-			.WithMany()
-			.HasForeignKey(p => p.GameId);
+				  .WithMany()   
+				  .HasForeignKey(p => p.GameId);
 
 			entity.HasOne(p => p.Character)
-			.WithMany()
-			.HasForeignKey(p => p.CharacterId);
+				  .WithMany()    
+				  .HasForeignKey(p => p.CharacterId);
 
 			entity.HasOne(x => x.Player)
-			.WithMany()
-			.HasForeignKey(x => x.PlayerId);
+				  .WithMany()       
+				  .HasForeignKey(x => x.PlayerId);
 
-			entity.HasOne(p => p.PlayerCharacterStat)
-			.WithMany()
-			.HasForeignKey(x => new { x.PlayerId, x.CharacterId });
 		});
 	}
 }	

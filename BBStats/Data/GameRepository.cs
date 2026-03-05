@@ -25,8 +25,8 @@ public class GameRepository : IGamesRepository
 		var gameInDb = await AddGameFromDtoAsync(game);
 		await UpdateMatchupAsync(game);
 
-		var playerA =  UpdateOrCreatePlayerAsync(game.PlayerAId, game.PlayerA);
-		var playerB =  UpdateOrCreatePlayerAsync(game.PlayerBId, game.PlayerB);
+		var playerA =  await UpdateOrCreatePlayerAsync(game.PlayerAId, game.PlayerA);
+		var playerB =  await UpdateOrCreatePlayerAsync(game.PlayerBId, game.PlayerB);
 
 
 		var characterStatA =  await GetOrCreatePlayerCharacterStat(game.PlayerAId, game.CharacterAId);
