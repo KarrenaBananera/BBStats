@@ -1,0 +1,30 @@
+@model PlayerProfilePageViewModel
+@{
+    var prevUrl = Model.CurrentPage > 1
+        ? PlayerPageUrl.For(Url, Model.SteamId, Model.CharacterSlug, Model.CurrentPage - 1)
+        : null;
+    var nextUrl = Model.CurrentPage < Model.TotalPages
+        ? PlayerPageUrl.For(Url, Model.SteamId, Model.CharacterSlug, Model.CurrentPage + 1)
+        : null;
+}
+<div class="profile-pagination @(ViewData["PaginationClass"] as string)" role="navigation" aria-label="Match list pagination">
+    @if (prevUrl is not null)
+    {
+        <a href="@prevUrl" class="profile-pagination__btn">← Previous</a>
+    }
+    else
+    {
+        <span class="profile-pagination__btn is-disabled" aria-disabled="true">← Previous</span>
+    }
+
+    <span class="page-indicator">Page @Model.CurrentPage</span>
+
+    @if (nextUrl is not null)
+    {
+        <a href="@nextUrl" class="profile-pagination__btn">Next →</a>
+    }
+    else
+    {
+        <span class="profile-pagination__btn is-disabled" aria-disabled="true">Next →</span>
+    }
+</div>

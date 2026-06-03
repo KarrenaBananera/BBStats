@@ -74,3 +74,13 @@ tbody {
 .center {
     text-align: center;
 }
+
+.top-player-link {
+    color: #6ea8fe;
+    text-decoration: none;
+
+    &:hover {
+        color: #9ec5fe;
+        text-decoration: underline;
+    }
+}

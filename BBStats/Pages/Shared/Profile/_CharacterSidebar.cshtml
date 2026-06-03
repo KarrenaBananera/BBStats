@@ -1,0 +1,15 @@
+@model PlayerProfilePageViewModel
+<div class="col-lg-4">
+    <div class="secondLevelDiv profile-characters-panel h-100">
+        @foreach (var character in Model.Characters)
+        {
+            <a asp-page="/Player/Index"
+               asp-route-steamId="@Model.SteamId"
+               asp-route-character="@character.Slug"
+               class="profile-char-link @(character.IsActive ? "active" : null)">
+                <span class="profile-char-name">@character.DisplayName</span>
+                <span class="profile-char-meta">@character.Games games · @character.Rating</span>
+            </a>
+        }
+    </div>
+</div>

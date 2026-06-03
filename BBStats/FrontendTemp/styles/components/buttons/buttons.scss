@@ -1,10 +1,26 @@
 @use "../../base/variables/variables.scss" as *;
 
 .tableButton{
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    line-height: 1;
+    text-decoration: none;
     color: $text-color;
     border: solid 1px $border-color;
     background-color: $second-main-color;
     border-radius: $border-radius;
     width: 40px;
     height: 40px;
+    cursor: pointer;
+
+    &.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: default;
+    }
 }

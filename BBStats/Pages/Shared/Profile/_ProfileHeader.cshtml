@@ -1,0 +1,14 @@
+@model PlayerProfilePageViewModel
+<div class="col-lg-8">
+    <div class="secondLevelDiv profile-header-block h-100">
+        <h1 class="profile-name">@Model.PlayerName</h1>
+        <div class="profile-rankings">
+            <span>Overall rank: <strong>#@Model.OverallRank</strong></span>
+            <span>Rank on @Model.CharacterDisplayName: <strong>#@Model.CharacterRank</strong></span>
+            <span class="profile-rating">
+                @Model.Rating
+                <span class="profile-rating-deviation">± @Model.RatingDeviation</span>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+@page "/"
+@model BBStats.Pages.Top.IndexModel
+@{
+    ViewData["Title"] = "Top Players";
+}
+
+<div class="mainDiv container py-4">
+    <table>
+        <thead>
+            <tr>
+                <th class="left">#</th>
+                <th class="left">Player</th>
+                <th class="right">Character</th>
+                <th class="right">Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Top.Rows.Count == 0)
+            {
+                <tr>
+                    <td colspan="4" class="left text-muted">No ranked players yet.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var row in Model.Top.Rows)
+                {
+                    <tr>
+                        <td class="left">@row.Rank</td>
+                        <td class="left">
+                            <a asp-page="/Player/Index"
+                               asp-route-steamId="@row.SteamId"
+                               asp-route-character="@row.CharacterSlug"
+                               class="top-player-link">@row.PlayerName</a>
+                        </td>
+                        <td class="right">@row.CharacterName</td>
+                        <td class="right">@row.Rating</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div class="pagination-container">
+        @if (Model.Top.HasPreviousPage)
+        {
+            <a href="@Model.GetPageUrl(Model.Top.PageNumber - 1)" class="tableButton" aria-label="Previous page">&lt;</a>
+        }
+        else
+        {
+            <span class="tableButton is-disabled" aria-disabled="true">&lt;</span>
+        }
+
+        <span class="page-info mx-4">@Model.Top.PageNumber</span>
+
+        @if (Model.Top.HasNextPage)
+        {
+            <a href="@Model.GetPageUrl(Model.Top.PageNumber + 1)" class="tableButton" aria-label="Next page">&gt;</a>
+        }
+        else
+        {
+            <span class="tableButton is-disabled" aria-disabled="true">&gt;</span>
+        }
+    </div>
+</div>

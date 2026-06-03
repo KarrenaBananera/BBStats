@@ -1,43 +1,156 @@
 @use "../../base/variables/variables.scss" as *;
 
 @mixin nav_a_mixin(){
+  position: relative;
+  z-index: 0;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.75rem;
   color: $text-color;
   text-decoration: none;
   border-radius: 0.75rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
   font-size: 1.2rem;
-  min-height: 60px;
-  display: flex;
+  line-height: 1.25;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-self: center;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  background: transparent;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: transparent;
+    transition: background-color 0.15s ease;
+    z-index: -1;
+  }
 
   &:hover {
-    transform: translateY(-3px);
+    color: $text-color;
+
+    &::before {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
   }
 }
 
-nav {
-  a{
-    @include nav_a_mixin(); 
+header nav {
+  min-height: 60px;
+  align-items: center;
 
+  a,
+  .nav-dropdown-toggle {
+    @include nav_a_mixin();
+  }
+
+  a {
     svg {
       width: 50px;
       height: 50px;
       flex-shrink: 0;
-      
+
       path {
         fill: $text-color;
       }
     }
   }
-  
+
+  .nav-dropdown-toggle {
+    cursor: pointer;
+    appearance: none;
+    font-family: inherit;
+    margin: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+  }
+
+  .nav-dropdown.is-open .nav-dropdown-toggle::before {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
   ul {
     list-style: none;
     display: flex;
     gap: 1.5rem;
     align-items: center;
+    min-height: 60px;
+  }
+}
+
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 1100;
+  min-width: min(720px, calc(100vw - 2rem));
+  width: min(720px, calc(100vw - 2rem));
+  padding: 0.75rem 1rem;
+  background-color: $second-main-color;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.15rem 1rem;
+  overflow: visible;
+}
+
+.nav-dropdown.is-open .nav-dropdown-menu {
+  display: grid;
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.5rem;
+  color: #ced4da;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $text-color;
+    transform: none;
+  }
+}
+
+@media (min-width: 576px) {
+  .nav-dropdown-menu {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .nav-dropdown-menu {
+    left: 50%;
+    width: min(520px, calc(100vw - 1.5rem));
+    min-width: min(520px, calc(100vw - 1.5rem));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    transform: translateX(-50%);
+  }
+
+  .nav-dropdown.is-open .nav-dropdown-menu {
+    transform: translateX(-50%);
   }
 }

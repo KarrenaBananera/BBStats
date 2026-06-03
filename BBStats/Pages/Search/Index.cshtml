@@ -1,0 +1,55 @@
+@page "/Search"
+@model BBStats.Pages.Search.IndexModel
+@{
+    ViewData["Title"] = "Search Players";
+}
+
+<div class="mainDiv container py-4">
+    <div class="secondLevelDiv col-12 mb-4">
+        <h1 class="mb-3">Search Players</h1>
+        <form asp-page="/Search/Index" method="get" role="search" class="search-form">
+            <input type="search"
+                   name="q"
+                   value="@Model.Search.Query"
+                   class="form-control form-control-dark text-bg-dark"
+                   placeholder="Steam ID or player name..."
+                   aria-label="Search players" />
+        </form>
+    </div>
+
+    @if (Model.Search.HasSearched)
+    {
+        <div class="secondLevelDiv col-12">
+            @if (!string.IsNullOrEmpty(Model.Search.Message))
+            {
+                <p class="text-white-50 mb-0">@Model.Search.Message</p>
+            }
+            else
+            {
+                <h2 class="mb-3">Results for "@Model.Search.Query"</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="left">Player</th>
+                            <th class="right">Steam ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var result in Model.Search.Results)
+                        {
+                            <tr>
+                                <td class="left">
+                                    <a asp-page="/Player/Index"
+                                       asp-route-steamId="@result.SteamId"
+                                       asp-route-character="@result.CharacterSlug"
+                                       class="top-player-link">@result.PlayerName</a>
+                                </td>
+                                <td class="right">@result.SteamId</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    }
+</div>

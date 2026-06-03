@@ -1,0 +1,34 @@
+@page "/player/{steamId}/{character}/{matchPage?}"
+@model BBStats.Pages.Player.IndexModel
+@{
+    ViewData["Title"] = $"{Model.Profile.PlayerName} — {Model.Profile.CharacterDisplayName}";
+}
+
+<div class="mainDiv container py-4">
+    <div class="row profile-top g-3">
+        <partial name="Profile/_ProfileHeader" model="Model.Profile" />
+        <partial name="Profile/_CharacterSidebar" model="Model.Profile" />
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="secondLevelDiv">
+                <h2 class="profile-matches-title">Matches</h2>
+
+                @if (Model.Profile.HasMatches)
+                {
+                    <partial name="Profile/_MatchSeriesList" model="Model.Profile" />
+                }
+                else if (!string.IsNullOrEmpty(Model.Profile.EmptyMessage))
+                {
+                    <p class="text-white-50 mb-0">@Model.Profile.EmptyMessage</p>
+                }
+
+                @{
+                    ViewData["PaginationClass"] = Model.Profile.HasMatches ? null : "mt-4";
+                }
+                <partial name="Profile/_ProfilePagination" model="Model.Profile" />
+            </div>
+        </div>
+    </div>
+</div>

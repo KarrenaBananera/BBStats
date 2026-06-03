@@ -339,23 +339,22 @@ namespace BBStats.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("EloAfter")
                         .HasColumnType("REAL");
 
                     b.Property<double>("EloBefore")
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("PlayerCharacterStatCharacterId")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("PlayerId", "GameId", "CharacterId");
 
-                    b.Property<long?>("PlayerCharacterStatPlayerId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("PlayerId", "GameId");
+                    b.HasIndex("CharacterId");
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
+                    b.HasIndex("PlayerId", "CharacterId");
 
                     b.ToTable("PlayersGames");
                 });
@@ -447,6 +446,12 @@ namespace BBStats.Migrations
 
             modelBuilder.Entity("BBStats.Data.Entites.PlayerGame", b =>
                 {
+                    b.HasOne("BBStats.Data.Entites.Character", "Character")
+                        .WithMany()
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BBStats.Data.Entites.Game", "Game")
                         .WithMany()
                         .HasForeignKey("GameId")
@@ -461,7 +466,11 @@ namespace BBStats.Migrations
 
                     b.HasOne("BBStats.Data.Entites.PlayerCharacterStat", null)
                         .WithMany("Games")
-                        .HasForeignKey("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
+                        .HasForeignKey("PlayerId", "CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
 
                     b.Navigation("Game");
 

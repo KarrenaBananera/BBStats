@@ -1,0 +1,108 @@
+@page "/Home"
+@model IndexModel
+@{
+    ViewData["Title"] = "BlazBlueStats";
+    const string tournamentImage = "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=400&fit=crop";
+}
+
+<div class="mainDiv container py-4">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="text-white mb-4">Welcome to BB Stats</h1>
+            <p class="text-white-50 lead">Player statistics and ratings in BlazBlue</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-white mb-4 text-center">Upcoming Tournaments</h2>
+            <div id="upcomingTournaments" class="carousel slide col-10" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="tournament-card">
+                            <img src="@tournamentImage" class="d-block w-100" alt="BlazBlue Cup 2024" />
+                            <div class="tournament-info">
+                                <h4>BlazBlue Cup 2024</h4>
+                                <p>December 15, 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="tournament-card">
+                            <img src="@tournamentImage" class="d-block w-100" alt="Winter Showdown" />
+                            <div class="tournament-info">
+                                <h4>Winter Showdown</h4>
+                                <p>January 20, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="tournament-card">
+                            <img src="@tournamentImage" class="d-block w-100" alt="Spring Championship" />
+                            <div class="tournament-info">
+                                <h4>Spring Championship</h4>
+                                <p>March 15, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev d-md-flex" type="button" data-bs-target="#upcomingTournaments" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next d-md-flex" type="button" data-bs-target="#upcomingTournaments" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-white text-center mb-4">Past Tournaments</h2>
+            <div id="pastTournaments" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="tournament-card">
+                            <img src="@tournamentImage" class="d-block w-100" alt="Autumn Battle 2024" />
+                            <div class="tournament-info">
+                                <h4>Autumn Battle 2024</h4>
+                                <p>October 10, 2024</p>
+                                <span class="tournament-winner">Winner: <a asp-page="/Player/Index" asp-route-steamId="76561198012345678" asp-route-character="ragna">Player123</a></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="tournament-card">
+                            <img src="@tournamentImage" class="d-block w-100" alt="Summer Slam" />
+                            <div class="tournament-info">
+                                <h4>Summer Slam</h4>
+                                <p>August 15, 2024</p>
+                                <span class="tournament-winner">Winner: BB_Master</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="tournament-card">
+                            <img src="@tournamentImage" class="d-block w-100" alt="Spring Invitational" />
+                            <div class="tournament-info">
+                                <h4>Spring Invitational</h4>
+                                <p>May 20, 2024</p>
+                                <span class="tournament-winner">Winner: RagnaPlayer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev d-md-flex" type="button" data-bs-target="#pastTournaments" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next d-md-flex" type="button" data-bs-target="#pastTournaments" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

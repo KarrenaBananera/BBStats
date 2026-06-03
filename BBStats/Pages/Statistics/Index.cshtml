@@ -1,0 +1,67 @@
+@page "/Statistics/{character?}"
+@model BBStats.Pages.Statistics.IndexModel
+@{
+    ViewData["Title"] = $"{Model.Stats.DisplayName} Statistics";
+}
+
+<div class="mainDiv container mb-3">
+    <div class="secondLevelDiv col-12">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="mb-5">@Model.Stats.DisplayName</h1>
+                <h5>Usage</h5>
+                <p>@Model.Stats.UsagePercent.ToString("0.#")%</p>
+                <h5>Winrate</h5>
+                <p>@Model.Stats.WinratePercent.ToString("0.#")%</p>
+                <h5>Total Matches</h5>
+                <p>@Model.Stats.TotalMatches.ToString("N0")</p>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="@Model.Stats.PortraitImageUrl"
+                     alt="@Model.Stats.DisplayName portrait"
+                     style="max-height: 400px;" />
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-4 mt-4">Matchup Statistics</h2>
+
+    <div class="secondLevelDiv col-12">
+        @if (Model.Stats.Matchups.Count == 0)
+        {
+            <p class="text-muted mb-0">No matchup data yet.</p>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var matchup in Model.Stats.Matchups)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="statCard">
+                            <div class="character-banner">
+                                <img src="@matchup.ImageUrl" alt="@matchup.Name">
+                                <div class="character-name-overlay">
+                                    <h4>@matchup.Name</h4>
+                                </div>
+                            </div>
+                            <div class="matchup-stats">
+                                <div class="mainDiv-stat-item">
+                                    <div class="stat-label">Matchup frequency</div>
+                                    <div class="stat-value">@matchup.Frequency.ToString("0.#")%</div>
+                                </div>
+                                <div class="mainDiv-stat-item">
+                                    <div class="stat-label">Matches</div>
+                                    <div class="stat-value">@matchup.Matches.ToString("N0")</div>
+                                </div>
+                                <div class="mainDiv-stat-item">
+                                    <div class="stat-label">Winrate</div>
+                                    <div class="stat-value @matchup.WinrateCss">@matchup.Winrate.ToString("0.#")%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
