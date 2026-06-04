@@ -111,7 +111,7 @@ public class CharacterStatisticsService : ICharacterStatisticsService
 
 		return new MatchupStatViewModel(
 			opponentName,
-			CharacterImages.GetIconUrl(opponentName),
+			CharacterImages.GetStatsIconUrl(opponentName),
 			frequency,
 			matchupGames,
 			winrate,
