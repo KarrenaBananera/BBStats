@@ -40,10 +40,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<GamesFetcherOptions>(
 	builder.Configuration.GetSection(GamesFetcherOptions.SectionName));
 
-if (string.IsNullOrWhiteSpace(builder.Configuration[$"{GamesFetcherOptions.SectionName}:BaseUrl"]))
+var gamesFetcherOptions = builder.Configuration
+	.GetSection(GamesFetcherOptions.SectionName)
+	.Get<GamesFetcherOptions>() ?? new GamesFetcherOptions();
+
+if (gamesFetcherOptions.Enabled && string.IsNullOrWhiteSpace(gamesFetcherOptions.BaseUrl))
 {
 	throw new InvalidOperationException(
 		"GamesFetcher:BaseUrl is not configured. Set it in games-fetcher.json.");
+}
+
+if (gamesFetcherOptions.FetchIntervalSeconds < 1)
+{
+	throw new InvalidOperationException(
+		"GamesFetcher:FetchIntervalSeconds must be at least 1.");
 }
 
 builder.Services.AddHttpClient<GamesFetcherClient>(client =>
