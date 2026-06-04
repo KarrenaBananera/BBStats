@@ -5,6 +5,13 @@
 }
 
 <div class="mainDiv container py-4">
+    <section id="featured-players-section" class="featured-players-section mb-4" hidden>
+        <div class="secondLevelDiv">
+            <h2 class="featured-players-title">Featured Players</h2>
+            <div id="featured-players-list" class="featured-players-list"></div>
+        </div>
+    </section>
+
     @{
         ViewData["GetPageUrl"] = new Func<int, string?>(Model.GetPageUrl);
     }

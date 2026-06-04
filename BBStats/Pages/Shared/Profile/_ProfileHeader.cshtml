@@ -1,7 +1,17 @@
 @model PlayerProfilePageViewModel
 <div class="col-lg-8">
     <div class="secondLevelDiv profile-header-block h-100">
-        <h1 class="profile-name">@Model.PlayerName</h1>
+        <div class="profile-name-row">
+            <h1 class="profile-name">@Model.PlayerName</h1>
+            <button type="button"
+                    class="featured-player-toggle"
+                    data-steam-id="@Model.SteamId"
+                    data-player-name="@Model.PlayerName"
+                    aria-label="Save as featured player"
+                    title="Save as featured player">
+                <i class="bi bi-star" aria-hidden="true"></i>
+            </button>
+        </div>
         <div class="profile-rankings">
             <span>Overall rank: <strong>#@Model.OverallRank</strong></span>
             <span>Rank on @Model.CharacterDisplayName: <strong>#@Model.CharacterRank</strong></span>
