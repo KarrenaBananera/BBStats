@@ -15,6 +15,7 @@ public class TopPlayersService : ITopPlayersService
 
 	public async Task<TopPageViewModel> GetPageAsync(
 		int pageNumber,
+		int? characterId = null,
 		CancellationToken cancellationToken = default)
 	{
 		pageNumber = Math.Max(1, pageNumber);
@@ -23,6 +24,14 @@ public class TopPlayersService : ITopPlayersService
 			.AsNoTracking()
 			.Include(stat => stat.Player)
 			.Include(stat => stat.Character)
+			.AsQueryable();
+
+		if (characterId.HasValue)
+		{
+			query = query.Where(stat => stat.CharacterId == characterId.Value);
+		}
+
+		query = query
 			.OrderByDescending(stat => stat.PlayerRating.CurrentRating)
 			.ThenBy(stat => stat.PlayerId)
 			.ThenBy(stat => stat.CharacterId);

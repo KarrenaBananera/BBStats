@@ -1,0 +1,46 @@
+@model TopPageViewModel
+<div class="table-scroll">
+    <table>
+        <thead>
+            <tr>
+                <th class="left">#</th>
+                <th class="left">Player</th>
+                <th class="right">Character</th>
+                <th class="right">Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Rows.Count == 0)
+            {
+                <tr>
+                    <td colspan="4" class="left text-muted">No ranked players yet.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var row in Model.Rows)
+                {
+                    <tr>
+                        <td class="left">@row.Rank</td>
+                        <td class="left">
+                            <a asp-page="/Player/Index"
+                               asp-route-steamId="@row.SteamId"
+                               asp-route-character="@row.CharacterSlug"
+                               class="top-player-link">@row.PlayerName</a>
+                        </td>
+                        <td class="right">
+                            <span class="top-character-name">
+                                @row.CharacterName
+                                <img src="@CharacterImages.GetSmallIconUrl(row.CharacterName)"
+                                     alt=""
+                                     class="top-character-icon"
+                                     loading="lazy" />
+                            </span>
+                        </td>
+                        <td class="right">@row.Rating</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -28,7 +28,7 @@ public class IndexModel : PageModel
 			return RedirectToPage(new { page = 1 });
 		}
 
-		Top = await _topPlayersService.GetPageAsync(PageNumber, cancellationToken);
+		Top = await _topPlayersService.GetPageAsync(PageNumber, cancellationToken: cancellationToken);
 
 		if (PageNumber > Top.TotalPages && Top.TotalPages > 0)
 		{

@@ -1,7 +1,7 @@
-@page "/"
-@model BBStats.Pages.Top.IndexModel
+@page "/Characters/{character?}"
+@model BBStats.Pages.Characters.IndexModel
 @{
-    ViewData["Title"] = "Top Players";
+    ViewData["Title"] = $"{Model.CharacterDisplayName} Top";
 }
 
 <div class="mainDiv container py-4">

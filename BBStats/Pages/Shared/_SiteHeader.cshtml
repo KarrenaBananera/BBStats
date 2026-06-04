@@ -5,6 +5,21 @@
             <li><a asp-page="/Top/Index">Top</a></li>
             <li class="nav-dropdown" data-nav-dropdown>
                 <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                    Characters
+                </button>
+                <div class="nav-dropdown-menu" role="menu">
+                    @foreach (var character in CharactersSeed.All)
+                    {
+                        var slug = character.Name.ToLowerInvariant();
+                        <a asp-page="/Characters/Index"
+                           asp-route-character="@slug"
+                           class="nav-dropdown-item"
+                           role="menuitem">@character.Name</a>
+                    }
+                </div>
+            </li>
+            <li class="nav-dropdown" data-nav-dropdown>
+                <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
                     Statistics
                 </button>
                 <div class="nav-dropdown-menu" role="menu">
