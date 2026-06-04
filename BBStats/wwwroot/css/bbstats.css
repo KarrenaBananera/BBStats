@@ -930,21 +930,8 @@ tbody tr:last-child td:last-child {
   gap: 0.5rem;
 }
 
-.series-replay-sep {
-  color: rgba(255, 255, 255, 0.35);
-  user-select: none;
-}
-
-.series-replay-open,
-.series-replay-sep {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .series-replay-open,
-  .series-replay-sep {
-    display: inline;
-  }
+.series-replay-open {
+  display: inline;
 }
 
 .profile-pagination {
