@@ -1,4 +1,3 @@
-using System.Globalization;
 using BBStats.Data;
 using BBStats.Data.Entites;
 using BBStats.Models.UI;
@@ -9,7 +8,6 @@ namespace BBStats.Services;
 public class PlayerProfileService : IPlayerProfileService
 {
 	private const int SetsPerPage = 10;
-	private static readonly CultureInfo DisplayCulture = CultureInfo.InvariantCulture;
 
 	private readonly AppDbContext _dbContext;
 
@@ -212,13 +210,13 @@ public class PlayerProfileService : IPlayerProfileService
 				index + 1,
 				game.Won ? "Win" : "Loss",
 				game.Won ? "text-success" : "text-danger",
-				FormatDateTime(game.PlayedAt)))
+				AsUtc(game.PlayedAt)))
 			.ToList();
 
 		return new SeriesViewModelData(
-			firstGame.PlayedAt,
+			AsUtc(firstGame.PlayedAt),
 			new MatchSeriesViewModel(
-				FormatDateTime(firstGame.PlayedAt),
+				AsUtc(firstGame.PlayedAt),
 				firstGame.OpponentName,
 				firstGame.OpponentId.ToString(),
 				firstGame.OpponentCharacterName.ToLowerInvariant(),
@@ -281,8 +279,10 @@ public class PlayerProfileService : IPlayerProfileService
 		return ("0", "text-muted");
 	}
 
-	private static string FormatDateTime(DateTime dateTime) =>
-		dateTime.ToString("dd.MM.yyyy HH:mm", DisplayCulture);
+	private static DateTime AsUtc(DateTime dateTime) =>
+		dateTime.Kind == DateTimeKind.Utc
+			? dateTime
+			: DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
 
 	private sealed record PlayerGameContext(
 		PlayerGame PlayerGame,

@@ -1,3 +1,4 @@
+using System.Globalization;
 using BBStats.Models.UI;
 
 namespace BBStats.Pages.Player;
@@ -109,6 +110,11 @@ public static class PlayerProfileMock
                 ("Loss", "text-danger"), ("Win", "text-success")]),
     ];
 
+    private static DateTime ParseMockUtc(string value) =>
+        DateTime.SpecifyKind(
+            DateTime.ParseExact(value, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture),
+            DateTimeKind.Utc);
+
     private static MatchSeriesViewModel CreateSeries(
         string dateTime,
         string opponentName,
@@ -119,11 +125,36 @@ public static class PlayerProfileMock
         string scoreCss,
         string ratingDelta,
         string ratingDeltaCss,
+        IReadOnlyList<(string Outcome, string Css)> games) =>
+        CreateSeries(
+            ParseMockUtc(dateTime),
+            opponentName,
+            opponentSteamId,
+            opponentCharSlug,
+            opponentCharDisplay,
+            score,
+            scoreCss,
+            ratingDelta,
+            ratingDeltaCss,
+            games);
+
+    private static MatchSeriesViewModel CreateSeries(
+        DateTime playedAtUtc,
+        string opponentName,
+        string opponentSteamId,
+        string opponentCharSlug,
+        string opponentCharDisplay,
+        string score,
+        string scoreCss,
+        string ratingDelta,
+        string ratingDeltaCss,
         IReadOnlyList<(string Outcome, string Css)> games)
     {
-        var rows = games.Select((g, i) => new GameResultRow(i + 1, g.Outcome, g.Css)).ToList();
+        var rows = games
+            .Select((g, i) => new GameResultRow(i + 1, g.Outcome, g.Css, playedAtUtc))
+            .ToList();
         return new MatchSeriesViewModel(
-            dateTime,
+            playedAtUtc,
             opponentName,
             opponentSteamId,
             opponentCharSlug,

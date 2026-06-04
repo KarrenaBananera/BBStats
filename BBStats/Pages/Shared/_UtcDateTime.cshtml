@@ -1,0 +1,7 @@
+@model DateTime
+@{
+    var utc = Model.Kind == DateTimeKind.Utc
+        ? Model
+        : DateTime.SpecifyKind(Model, DateTimeKind.Utc);
+}
+<time class="local-datetime" datetime="@utc.ToString("O")"></time>

@@ -6,7 +6,7 @@
             <button type="button" class="series-summary" aria-expanded="false">
                 <i class="bi bi-chevron-right series-chevron" aria-hidden="true"></i>
                 <div class="series-main-row">
-                    <span class="series-datetime">@series.DateTimeDisplay</span>
+                    <span class="series-datetime"><partial name="Shared/_UtcDateTime" model="series.PlayedAtUtc" /></span>
                     <a asp-page="/Player/Index"
                        asp-route-steamId="@series.OpponentSteamId"
                        asp-route-character="@series.OpponentCharacterSlug"
@@ -22,7 +22,7 @@
                 {
                     <div class="series-game-row">
                         <span>Game @game.Number</span>
-                        <span class="series-game-date">@game.DateTimeDisplay</span>
+                        <span class="series-game-date"><partial name="Shared/_UtcDateTime" model="game.PlayedAtUtc" /></span>
                         <span class="@game.OutcomeCss series-game-outcome">@game.Outcome</span>
                     </div>
                 }

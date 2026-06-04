@@ -7,10 +7,10 @@ public record CharacterSidebarItem(
     int Rating,
     bool IsActive);
 
-public record GameResultRow(int Number, string Outcome, string OutcomeCss, string DateTimeDisplay = "");
+public record GameResultRow(int Number, string Outcome, string OutcomeCss, DateTime PlayedAtUtc);
 
 public record MatchSeriesViewModel(
-    string DateTimeDisplay,
+    DateTime PlayedAtUtc,
     string OpponentName,
     string OpponentSteamId,
     string OpponentCharacterSlug,
