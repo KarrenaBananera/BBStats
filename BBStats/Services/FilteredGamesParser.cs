@@ -1,43 +1,48 @@
-﻿
-using System.Collections.Concurrent;
-
-namespace BBStats.Services;
+﻿namespace BBStats.Services;
 
 public class FilteredGamesParser : IGamesParser
 {
-	private readonly GamesParser _parser = new ();
-	private readonly ConcurrentDictionary<string, DateTime> _seenGames = new();
-	private readonly TimeSpan _ttl = TimeSpan.FromHours(12);
+	private const int MaxSeenGames = 250;
+
+	private readonly GamesParser _parser = new();
+	private readonly object _sync = new();
+	private readonly Queue<string> _seenOrder = new();
+	private readonly HashSet<string> _seenUrls = new(StringComparer.Ordinal);
+
 	public List<GameDTO> Parse(string data)
 	{
 		var result = new List<GameDTO>();
 		var games = _parser.Parse(data);
-		
+
 		foreach (var game in games)
 		{
-			if (_seenGames.TryAdd(game.GameUrl, DateTime.UtcNow))
+			if (TryRegister(game.GameUrl))
+			{
 				result.Add(game);
+			}
 		}
 
 		return result;
 	}
 
-	public FilteredGamesParser()
+	private bool TryRegister(string gameUrl)
 	{
-		var timer = new System.Timers.Timer(50000);
-		timer.Elapsed += (_,_) => Cleanup();
-		timer.AutoReset = true;
-		timer.Enabled = true;
-	}
-
-	public void Cleanup()
-	{
-		var threshold = DateTime.UtcNow - _ttl;
-
-		foreach (var pair in _seenGames)
+		lock (_sync)
 		{
-			if (pair.Value < threshold)
-				_seenGames.TryRemove(pair.Key, out _);
+			if (!_seenUrls.Add(gameUrl))
+			{
+				return false;
+			}
+
+			_seenOrder.Enqueue(gameUrl);
+
+			while (_seenOrder.Count > MaxSeenGames)
+			{
+				var oldest = _seenOrder.Dequeue();
+				_seenUrls.Remove(oldest);
+			}
+
+			return true;
 		}
 	}
 }
