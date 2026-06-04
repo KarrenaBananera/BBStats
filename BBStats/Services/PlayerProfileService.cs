@@ -206,11 +206,13 @@ public class PlayerProfileService : IPlayerProfileService
 				: "text-warning";
 
 		var gameRows = setGames
-			.Select((game, index) => new GameResultRow(
-				index + 1,
-				game.Won ? "Win" : "Loss",
-				game.Won ? "text-success" : "text-danger",
-				AsUtc(game.PlayedAt)))
+			.Select((game, index) => MapGameRow(game, index + 1))
+			.ToList();
+
+		var downloadUrls = gameRows
+			.Select(row => row.ReplayDownloadUrl)
+			.Where(url => !string.IsNullOrWhiteSpace(url))
+			.Cast<string>()
 			.ToList();
 
 		return new SeriesViewModelData(
@@ -225,7 +227,21 @@ public class PlayerProfileService : IPlayerProfileService
 				scoreCss,
 				ratingDeltaText,
 				ratingDeltaCss,
-				gameRows));
+				gameRows,
+				downloadUrls));
+	}
+
+	private static GameResultRow MapGameRow(PlayerGameContext game, int number)
+	{
+		var (openUrl, downloadUrl) = GameReplayLink.Parse(game.Game.GameUrl);
+
+		return new GameResultRow(
+			number,
+			game.Won ? "Win" : "Loss",
+			game.Won ? "text-success" : "text-danger",
+			AsUtc(game.PlayedAt),
+			openUrl,
+			downloadUrl);
 	}
 
 	private async Task<int> GetCharacterRankAsync(

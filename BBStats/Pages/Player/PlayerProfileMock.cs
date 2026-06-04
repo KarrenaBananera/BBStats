@@ -153,6 +153,13 @@ public static class PlayerProfileMock
         var rows = games
             .Select((g, i) => new GameResultRow(i + 1, g.Outcome, g.Css, playedAtUtc))
             .ToList();
+
+        var downloadUrls = rows
+            .Select(row => row.ReplayDownloadUrl)
+            .Where(url => !string.IsNullOrWhiteSpace(url))
+            .Cast<string>()
+            .ToList();
+
         return new MatchSeriesViewModel(
             playedAtUtc,
             opponentName,
@@ -163,6 +170,7 @@ public static class PlayerProfileMock
             scoreCss,
             ratingDelta,
             ratingDeltaCss,
-            rows);
+            rows,
+            downloadUrls);
     }
 }

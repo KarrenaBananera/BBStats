@@ -7,7 +7,13 @@ public record CharacterSidebarItem(
     int Rating,
     bool IsActive);
 
-public record GameResultRow(int Number, string Outcome, string OutcomeCss, DateTime PlayedAtUtc);
+public record GameResultRow(
+	int Number,
+	string Outcome,
+	string OutcomeCss,
+	DateTime PlayedAtUtc,
+	string? ReplayOpenUrl = null,
+	string? ReplayDownloadUrl = null);
 
 public record MatchSeriesViewModel(
     DateTime PlayedAtUtc,
@@ -19,7 +25,8 @@ public record MatchSeriesViewModel(
     string SeriesScoreCss,
     string RatingDelta,
     string RatingDeltaCss,
-    IReadOnlyList<GameResultRow> Games);
+    IReadOnlyList<GameResultRow> Games,
+    IReadOnlyList<string> ReplayDownloadUrls);
 
 public class PlayerProfilePageViewModel
 {

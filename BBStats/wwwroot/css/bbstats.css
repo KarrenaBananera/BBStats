@@ -761,6 +761,13 @@ tbody tr:last-child td:last-child {
 
 .series-rating-delta {
   font-weight: 600;
+}
+
+.series-main-row-end {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   margin-left: auto;
 }
 
@@ -793,7 +800,38 @@ tbody tr:last-child td:last-child {
 }
 
 .series-game-outcome {
+  font-weight: 600;
+}
+
+.series-game-row-end {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   margin-left: auto;
+}
+
+.series-game-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.series-replay-sep {
+  color: rgba(255, 255, 255, 0.35);
+  user-select: none;
+}
+
+.series-replay-open,
+.series-replay-sep {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .series-replay-open,
+  .series-replay-sep {
+    display: inline;
+  }
 }
 
 .profile-pagination {
@@ -862,8 +900,15 @@ tbody tr:last-child td:last-child {
     align-items: flex-start;
     gap: 0.25rem;
   }
-  .series-rating-delta {
+  .series-main-row-end {
     margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .series-game-row-end {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
   }
   .series-games {
     padding-left: 1.75rem;
