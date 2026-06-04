@@ -23,6 +23,13 @@ builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+	throw new InvalidOperationException(
+		"Connection string 'DefaultConnection' is not configured. " +
+		"Set environment variable ConnectionStrings__DefaultConnection (Production) " +
+		"or ConnectionStrings:DefaultConnection in appsettings.Development.json.");
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
