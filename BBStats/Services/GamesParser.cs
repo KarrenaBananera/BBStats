@@ -6,8 +6,6 @@ namespace BBStats.Services;
 
 public class GamesParser
 {
-	private static readonly TimeSpan SourceTimeZoneOffset = TimeSpan.FromHours(-4);
-
 	public List<GameDTO> Parse(string data)
 	{
 		var result = new List<GameDTO>();
@@ -72,13 +70,11 @@ public class GamesParser
 
 	private static DateTime ParsePlayedAtUtc(string uploadDateTime)
 	{
-		var localTime = DateTime.Parse(
+		var utcTime = DateTime.Parse(
 			uploadDateTime,
 			CultureInfo.InvariantCulture,
-			DateTimeStyles.None);
+			DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 
-		return DateTime.SpecifyKind(
-			new DateTimeOffset(localTime, SourceTimeZoneOffset).UtcDateTime,
-			DateTimeKind.Utc);
+		return DateTime.SpecifyKind(utcTime, DateTimeKind.Utc);
 	}
 }

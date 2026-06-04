@@ -1,4 +1,4 @@
-﻿using BBStats.Data.Entites;
+using BBStats.Data.Entites;
 using Microsoft.EntityFrameworkCore;
 
 namespace BBStats.Data;
@@ -54,7 +54,7 @@ public class AppDbContext : DbContext
 		{
 			entity.Property(g => g.PlayedAt)
 				.HasConversion(
-					v => v.Kind == DateTimeKind.Utc ? v : DateTime.SpecifyKind(v.ToUniversalTime(), DateTimeKind.Utc),
+					v => ToStoredUtc(v),
 					v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
 			entity.HasOne(g => g.CharacterA)
@@ -109,4 +109,19 @@ public class AppDbContext : DbContext
 
 		});
 	}
-}	
+
+	private static DateTime ToStoredUtc(DateTime value)
+	{
+		if (value.Kind == DateTimeKind.Utc)
+		{
+			return value;
+		}
+
+		if (value.Kind == DateTimeKind.Local)
+		{
+			return value.ToUniversalTime();
+		}
+
+		return DateTime.SpecifyKind(value, DateTimeKind.Utc);
+	}
+}

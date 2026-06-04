@@ -1,7 +1,12 @@
 @model DateTime
+@using System.Globalization
 @{
-    var utc = Model.Kind == DateTimeKind.Utc
-        ? Model
-        : DateTime.SpecifyKind(Model, DateTimeKind.Utc);
+    var utc = Model.Kind switch
+    {
+        DateTimeKind.Utc => Model,
+        DateTimeKind.Local => Model.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(Model, DateTimeKind.Utc)
+    };
+    var isoUtc = utc.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
 }
-<time class="local-datetime" datetime="@utc.ToString("O")"></time>
+<time class="local-datetime" datetime="@isoUtc"></time>
