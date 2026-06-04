@@ -1,64 +1,64 @@
-@model PlayerProfilePageViewModel
-<div class="match-series-list">
-    @foreach (var series in Model.Series)
-    {
-        <div class="match-series">
-            <button type="button" class="series-summary" aria-expanded="false">
-                <i class="bi bi-chevron-right series-chevron" aria-hidden="true"></i>
-                <div class="series-main-row">
-                    <span class="series-datetime"><partial name="Shared/_UtcDateTime" model="series.PlayedAtUtc" /></span>
-                    <a asp-page="/Player/Index"
-                       asp-route-steamId="@series.OpponentSteamId"
-                       asp-route-character="@series.OpponentCharacterSlug"
-                       class="series-opponent"
-                       onclick="event.stopPropagation()">@series.OpponentName</a>
-                    <span class="series-opp-char">@series.OpponentCharacterDisplay</span>
-                    <span class="series-result @series.SeriesScoreCss">@series.SeriesScore</span>
-                    <span class="series-main-row-end">
-                        <span class="series-rating-delta @series.RatingDeltaCss">@series.RatingDelta</span>
-                        @if (series.ReplayDownloadUrls.Count > 0)
-                        {
-                            <a href="#"
-                               class="top-player-link series-download-set"
-                               data-replay-urls="@string.Join("|", series.ReplayDownloadUrls)"
-                               onclick="event.stopPropagation()">Download set</a>
-                        }
-                    </span>
-                </div>
-            </button>
-            <div class="series-games">
-                @foreach (var game in series.Games)
-                {
-                    var hasOpen = !string.IsNullOrEmpty(game.ReplayOpenUrl);
-                    var hasDownload = !string.IsNullOrEmpty(game.ReplayDownloadUrl);
-                    <div class="series-game-row">
-                        <span>Game @game.Number</span>
-                        <span class="series-game-date"><partial name="Shared/_UtcDateTime" model="game.PlayedAtUtc" /></span>
-                        <span class="series-game-row-end">
-                            <span class="@game.OutcomeCss series-game-outcome">@game.Outcome</span>
-                            @if (hasOpen || hasDownload)
-                            {
-                                <span class="series-game-links" onclick="event.stopPropagation()">
-                                    @if (hasOpen)
-                                    {
-                                        <a href="@game.ReplayOpenUrl" class="top-player-link series-replay-open">Open</a>
-                                    }
-                                    @if (hasOpen && hasDownload)
-                                    {
-                                        <span class="series-replay-sep" aria-hidden="true">·</span>
-                                    }
-                                    @if (hasDownload)
-                                    {
-                                        <a href="@game.ReplayDownloadUrl"
-                                           class="top-player-link"
-                                           download>Download</a>
-                                    }
-                                </span>
-                            }
-                        </span>
-                    </div>
-                }
-            </div>
-        </div>
-    }
-</div>
+@model PlayerProfilePageViewModel
+<div class="match-series-list">
+    @foreach (var series in Model.Series)
+    {
+        <div class="match-series">
+            <button type="button" class="series-summary" aria-expanded="false">
+                <i class="bi bi-chevron-right series-chevron" aria-hidden="true"></i>
+                <div class="series-main-row">
+                    <span class="series-datetime"><partial name="Shared/_UtcDateTime" model="series.PlayedAtUtc" /></span>
+                    <a asp-page="/Player/Index"
+                       asp-route-steamId="@series.OpponentSteamId"
+                       asp-route-character="@series.OpponentCharacterSlug"
+                       class="series-opponent"
+                       onclick="event.stopPropagation()">@series.OpponentName</a>
+                    <span class="series-opp-char">@series.OpponentCharacterDisplay</span>
+                    <span class="series-result @series.SeriesScoreCss">@series.SeriesScore</span>
+                    <span class="series-main-row-end">
+                        <span class="series-rating-delta @series.RatingDeltaCss">@series.RatingDelta</span>
+                        @if (series.ReplayDownloadUrls.Count > 0)
+                        {
+                            <a href="#"
+                               class="top-player-link series-download-set"
+                               data-replay-urls="@string.Join("|", series.ReplayDownloadUrls)"
+                               onclick="event.stopPropagation()">Download set</a>
+                        }
+                    </span>
+                </div>
+            </button>
+            <div class="series-games">
+                @foreach (var game in series.Games)
+                {
+                    var hasOpen = !string.IsNullOrEmpty(game.ReplayOpenUrl);
+                    var hasDownload = !string.IsNullOrEmpty(game.ReplayDownloadUrl);
+                    <div class="series-game-row">
+                        <span>Game @game.Number</span>
+                        <span class="series-game-date"><partial name="Shared/_UtcDateTime" model="game.PlayedAtUtc" /></span>
+                        <span class="series-game-row-end">
+                            <span class="@game.OutcomeCss series-game-outcome">@game.Outcome</span>
+                            @if (hasOpen || hasDownload)
+                            {
+                                <span class="series-game-links" onclick="event.stopPropagation()">
+                                    @if (hasOpen)
+                                    {
+                                        <a href="@game.ReplayOpenUrl" class="top-player-link series-replay-open">Open</a>
+                                    }
+                                    @if (hasOpen && hasDownload)
+                                    {
+                                        <span class="series-replay-sep" aria-hidden="true">·</span>
+                                    }
+                                    @if (hasDownload)
+                                    {
+                                        <a href="@game.ReplayDownloadUrl"
+                                           class="top-player-link"
+                                           download>Download</a>
+                                    }
+                                </span>
+                            }
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

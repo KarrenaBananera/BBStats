@@ -5,6 +5,7 @@
 }
 
 <div class="mainDiv container py-4">
+    <div class="table-scroll">
     <table>
         <thead>
             <tr>
@@ -33,13 +34,22 @@
                                asp-route-character="@row.CharacterSlug"
                                class="top-player-link">@row.PlayerName</a>
                         </td>
-                        <td class="right">@row.CharacterName</td>
+                        <td class="right">
+                            <span class="top-character-name">
+                                @row.CharacterName
+                                <img src="@CharacterImages.GetSmallIconUrl(row.CharacterName)"
+                                     alt=""
+                                     class="top-character-icon"
+                                     loading="lazy" />
+                            </span>
+                        </td>
                         <td class="right">@row.Rating</td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+    </div>
     <div class="pagination-container">
         @if (Model.Top.HasPreviousPage)
         {

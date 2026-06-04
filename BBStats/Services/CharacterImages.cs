@@ -48,6 +48,9 @@ public static class CharacterImages
 	public static string GetPortraitUrl(string characterName) =>
 		$"/data/characters/{characterName}.png";
 
+	public static string GetSmallIconUrl(string characterName) =>
+		$"/data/characters/smallIcons/{characterName}.png";
+
 	public static string GetIconUrl(string characterName) =>
 		IconUrls.TryGetValue(characterName, out var url) ? url : GetPortraitUrl(characterName);
 }
