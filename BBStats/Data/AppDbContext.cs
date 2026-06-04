@@ -52,6 +52,11 @@ public class AppDbContext : DbContext
 
 		modelBuilder.Entity<Game>(entity =>
 		{
+			entity.Property(g => g.PlayedAt)
+				.HasConversion(
+					v => v.Kind == DateTimeKind.Utc ? v : DateTime.SpecifyKind(v.ToUniversalTime(), DateTimeKind.Utc),
+					v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
 			entity.HasOne(g => g.CharacterA)
 				.WithMany()
 				.HasForeignKey(g => g.CharacterAId)

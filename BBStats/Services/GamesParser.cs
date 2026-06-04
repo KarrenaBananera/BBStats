@@ -1,18 +1,13 @@
-﻿namespace BBStats.Services;
-
+﻿using System.Globalization;
 using BBStats.Data;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using Newtonsoft.Json.Linq;
+
+namespace BBStats.Services;
 
 public class GamesParser
 {
+	private static readonly TimeSpan SourceTimeZoneOffset = TimeSpan.FromHours(-4);
+
 	public List<GameDTO> Parse(string data)
 	{
 		var result = new List<GameDTO>();
@@ -46,7 +41,6 @@ public class GamesParser
 			for (int i = 0; i < headers.Count; i++)
 				rowDict[headers[i]] = cells[i]?["props"]?["children"];
 
-			
 			var playerAName = rowDict["p1"]?.ToString();
 			var playerBName = rowDict["p2"]?.ToString();
 
@@ -55,14 +49,7 @@ public class GamesParser
 
 			var winner = rowDict["winner"]?.Value<int>() ?? 0;
 
-			var playedAt = DateTime.Parse(
-				rowDict["upload_datetime_"]!.ToString(),
-				CultureInfo.InvariantCulture,
-				DateTimeStyles.None);
-
-			playedAt = playedAt.AddHours(4);
-			playedAt = DateTime.SpecifyKind(playedAt, DateTimeKind.Utc);
-
+			var playedAt = ParsePlayedAtUtc(rowDict["upload_datetime_"]!.ToString());
 
 			var replayUrl = rowDict["open"]?["props"]?["href"]?.ToString();
 
@@ -81,5 +68,17 @@ public class GamesParser
 		}
 
 		return result;
+	}
+
+	private static DateTime ParsePlayedAtUtc(string uploadDateTime)
+	{
+		var localTime = DateTime.Parse(
+			uploadDateTime,
+			CultureInfo.InvariantCulture,
+			DateTimeStyles.None);
+
+		return DateTime.SpecifyKind(
+			new DateTimeOffset(localTime, SourceTimeZoneOffset).UtcDateTime,
+			DateTimeKind.Utc);
 	}
 }
