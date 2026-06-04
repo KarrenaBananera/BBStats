@@ -3,10 +3,11 @@ using BBStats.Models.UI;
 using BBStats.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace BBStats.Pages.Statistics;
 
-[ResponseCache(Duration = 3600)]
+[OutputCache(Duration = 3600)]
 public class IndexModel : PageModel
 {
 	private readonly ICharacterStatisticsService _characterStatisticsService;

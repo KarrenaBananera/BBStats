@@ -2,10 +2,11 @@ using BBStats.Models.UI;
 using BBStats.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace BBStats.Pages.Top;
 
-[ResponseCache(Duration = 600, VaryByQueryKeys = ["page"])]
+[OutputCache(Duration = 600, VaryByQueryKeys = ["page"])]
 public class IndexModel : PageModel
 {
 	private readonly ITopPlayersService _topPlayersService;

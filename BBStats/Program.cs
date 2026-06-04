@@ -8,11 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
 
-builder.Services.AddResponseCaching();
+builder.Services.AddOutputCache();
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AddPageRoute("/Top/Index", "Top");
-    options.Conventions.AddPageRoute("/Top/Index", "Top/Index");
+    options.Conventions.AddPageRoute("/Top", "Top");
+    options.Conventions.AddPageRoute("/Top", "Top/Index");
 });
 builder.Services.AddSingleton<IGamesParser, FilteredGamesParser>();
 builder.Services.AddTransient<IGamesRepository,GameRepository>();
@@ -70,7 +70,7 @@ else
 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseResponseCaching();
+app.UseOutputCache();
 app.UseAuthorization();
 app.MapRazorPages();
 

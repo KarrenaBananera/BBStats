@@ -2,10 +2,11 @@ using BBStats.Models.UI;
 using BBStats.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace BBStats.Pages.Player;
 
-[ResponseCache(Duration = 300)]
+[OutputCache(Duration = 180)]
 public class IndexModel : PageModel
 {
 	private readonly IPlayerProfileService _playerProfileService;
