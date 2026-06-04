@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -8,23 +8,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BBStats.Migrations
 {
     /// <inheritdoc />
-    public partial class @base : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var characterOrderConstraint = migrationBuilder.ActiveProvider == "Microsoft.EntityFrameworkCore.SqlServer"
-                ? "[CharacterAId] <= [CharacterBId]"
-                : "\"CharacterAId\" <= \"CharacterBId\"";
-
             migrationBuilder.CreateTable(
                 name: "Characters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 20, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,10 +30,8 @@ namespace BBStats.Migrations
                 name: "Players",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 40, nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,18 +42,17 @@ namespace BBStats.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PlayerA = table.Column<string>(maxLength: 40, nullable: false),
-                    PlayerB = table.Column<string>(maxLength: 40, nullable: false),
-                    PlayerAId = table.Column<long>(nullable: false),
-                    PlayerBId = table.Column<long>(nullable: false),
-                    GameUrl = table.Column<string>(nullable: false),
-                    PlayedAt = table.Column<DateTime>(nullable: false),
-                    IsPlayerAWin = table.Column<bool>(nullable: false),
-                    CharacterAId = table.Column<int>(nullable: false),
-                    CharacterBId = table.Column<int>(nullable: false)
+                    PlayerA = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    PlayerB = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    PlayerAId = table.Column<long>(type: "bigint", nullable: false),
+                    PlayerBId = table.Column<long>(type: "bigint", nullable: false),
+                    GameUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PlayedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPlayerAWin = table.Column<bool>(type: "bit", nullable: false),
+                    CharacterAId = table.Column<int>(type: "int", nullable: false),
+                    CharacterBId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,16 +75,16 @@ namespace BBStats.Migrations
                 name: "Matchups",
                 columns: table => new
                 {
-                    CharacterAId = table.Column<int>(nullable: false),
-                    CharacterBId = table.Column<int>(nullable: false),
-                    TotalGames = table.Column<int>(nullable: false),
-                    WinsA = table.Column<int>(nullable: false),
-                    WinsB = table.Column<int>(nullable: false)
+                    CharacterAId = table.Column<int>(type: "int", nullable: false),
+                    CharacterBId = table.Column<int>(type: "int", nullable: false),
+                    TotalGames = table.Column<int>(type: "int", nullable: false),
+                    WinsA = table.Column<int>(type: "int", nullable: false),
+                    WinsB = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Matchups", x => new { x.CharacterAId, x.CharacterBId });
-                    table.CheckConstraint("CharacterOrder", characterOrderConstraint);
+                    table.CheckConstraint("CharacterOrder", "[CharacterAId] <= [CharacterBId]");
                     table.ForeignKey(
                         name: "FK_Matchups_Characters_CharacterAId",
                         column: x => x.CharacterAId,
@@ -111,14 +103,14 @@ namespace BBStats.Migrations
                 name: "PlayersCharactersStats",
                 columns: table => new
                 {
-                    PlayerId = table.Column<long>(nullable: false),
-                    CharacterId = table.Column<int>(nullable: false),
-                    Wins = table.Column<int>(nullable: false),
-                    Losses = table.Column<int>(nullable: false),
-                    MaxRating = table.Column<double>(nullable: false, defaultValue: 1000.0),
-                    PlayerRating_CurrentRating = table.Column<double>(nullable: false),
-                    PlayerRating_RatingDeviation = table.Column<double>(nullable: false),
-                    PlayerRating_Volatility = table.Column<double>(nullable: false)
+                    PlayerId = table.Column<long>(type: "bigint", nullable: false),
+                    CharacterId = table.Column<int>(type: "int", nullable: false),
+                    Wins = table.Column<int>(type: "int", nullable: false),
+                    Losses = table.Column<int>(type: "int", nullable: false),
+                    MaxRating = table.Column<double>(type: "float", nullable: false, defaultValue: 1000.0),
+                    PlayerRating_CurrentRating = table.Column<double>(type: "float", nullable: false),
+                    PlayerRating_RatingDeviation = table.Column<double>(type: "float", nullable: false),
+                    PlayerRating_Volatility = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,16 +133,21 @@ namespace BBStats.Migrations
                 name: "PlayersGames",
                 columns: table => new
                 {
-                    GameId = table.Column<int>(nullable: false),
-                    PlayerId = table.Column<long>(nullable: false),
-                    EloBefore = table.Column<double>(nullable: false),
-                    EloAfter = table.Column<double>(nullable: false),
-                    PlayerCharacterStatCharacterId = table.Column<int>(nullable: true),
-                    PlayerCharacterStatPlayerId = table.Column<long>(nullable: true)
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    PlayerId = table.Column<long>(type: "bigint", nullable: false),
+                    CharacterId = table.Column<int>(type: "int", nullable: false),
+                    EloBefore = table.Column<double>(type: "float", nullable: false),
+                    EloAfter = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayersGames", x => new { x.PlayerId, x.GameId });
+                    table.PrimaryKey("PK_PlayersGames", x => new { x.PlayerId, x.GameId, x.CharacterId });
+                    table.ForeignKey(
+                        name: "FK_PlayersGames_Characters_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Characters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PlayersGames_Games_GameId",
                         column: x => x.GameId,
@@ -158,10 +155,11 @@ namespace BBStats.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PlayersGames_PlayersCharactersStats_PlayerCharacterStatPlayerId_PlayerCharacterStatCharacterId",
-                        columns: x => new { x.PlayerCharacterStatPlayerId, x.PlayerCharacterStatCharacterId },
+                        name: "FK_PlayersGames_PlayersCharactersStats_PlayerId_CharacterId",
+                        columns: x => new { x.PlayerId, x.CharacterId },
                         principalTable: "PlayersCharactersStats",
-                        principalColumns: new[] { "PlayerId", "CharacterId" });
+                        principalColumns: new[] { "PlayerId", "CharacterId" },
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PlayersGames_Players_PlayerId",
                         column: x => x.PlayerId,
@@ -234,14 +232,19 @@ namespace BBStats.Migrations
                 column: "CharacterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlayersGames_CharacterId",
+                table: "PlayersGames",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PlayersGames_GameId",
                 table: "PlayersGames",
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlayersGames_PlayerCharacterStatPlayerId_PlayerCharacterStatCharacterId",
+                name: "IX_PlayersGames_PlayerId_CharacterId",
                 table: "PlayersGames",
-                columns: new[] { "PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId" });
+                columns: new[] { "PlayerId", "CharacterId" });
         }
 
         /// <inheritdoc />

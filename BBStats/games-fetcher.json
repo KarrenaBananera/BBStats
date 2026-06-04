@@ -1,5 +1,6 @@
 {
   "GamesFetcher": {
-    "BaseUrl": "http://89.167.76s.6:2000/"
+    "BaseUrl": "http://89.167.76.6:2000/"
   }
 }
+  

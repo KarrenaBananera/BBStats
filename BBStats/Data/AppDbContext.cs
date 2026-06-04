@@ -1,4 +1,4 @@
-using BBStats.Data.Entites;
+﻿using BBStats.Data.Entites;
 using Microsoft.EntityFrameworkCore;
 
 namespace BBStats.Data;
@@ -21,6 +21,11 @@ public class AppDbContext : DbContext
 		base.OnModelCreating(modelBuilder);
 
 		modelBuilder.Entity<Character>().HasData(CharactersSeed.All);
+
+		modelBuilder.Entity<Player>(entity =>
+		{
+			entity.Property(p => p.Id).ValueGeneratedNever();
+		});
 
 		modelBuilder.Entity<PlayerCharacterStat>(entity =>
 		{
@@ -62,7 +67,7 @@ public class AppDbContext : DbContext
 		{
 			entity.HasKey(u => new { u.CharacterAId, u.CharacterBId });
 			entity.ToTable(t =>
-				t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" <= \"CharacterBId\""));
+				t.HasCheckConstraint("CharacterOrder", "[CharacterAId] <= [CharacterBId]"));
 
 			entity.HasOne(m => m.CharacterA)
 				.WithMany()

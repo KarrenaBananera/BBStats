@@ -27,15 +27,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
 	options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-
-	if (builder.Environment.IsDevelopment())
-	{
-		options.UseSqlite(connectionString);
-	}
-	else
-	{
-		options.UseSqlServer(connectionString);
-	}
+	options.UseSqlServer(connectionString);
 });
 
 builder.Services.Configure<GamesFetcherOptions>(

@@ -3,6 +3,7 @@ using System;
 using BBStats.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -15,18 +16,24 @@ namespace BBStats.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.12");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.12")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("BBStats.Data.Entites.Character", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -219,39 +226,41 @@ namespace BBStats.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CharacterAId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("CharacterBId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("GameUrl")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsPlayerAWin")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("PlayedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PlayerA")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<long>("PlayerAId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PlayerB")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<long>("PlayerBId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -265,19 +274,19 @@ namespace BBStats.Migrations
             modelBuilder.Entity("BBStats.Data.Entites.Matchup", b =>
                 {
                     b.Property<int>("CharacterAId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("CharacterBId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalGames")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("WinsA")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("WinsB")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("CharacterAId", "CharacterBId");
 
@@ -285,20 +294,19 @@ namespace BBStats.Migrations
 
                     b.ToTable("Matchups", t =>
                         {
-                            t.HasCheckConstraint("CharacterOrder", "\"CharacterAId\" <= \"CharacterBId\"");
+                            t.HasCheckConstraint("CharacterOrder", "[CharacterAId] <= [CharacterBId]");
                         });
                 });
 
             modelBuilder.Entity("BBStats.Data.Entites.Player", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 
@@ -308,21 +316,21 @@ namespace BBStats.Migrations
             modelBuilder.Entity("BBStats.Data.Entites.PlayerCharacterStat", b =>
                 {
                     b.Property<long>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<int>("CharacterId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("Losses")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("MaxRating")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("REAL")
+                        .HasColumnType("float")
                         .HasDefaultValue(1000.0);
 
                     b.Property<int>("Wins")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("PlayerId", "CharacterId");
 
@@ -334,19 +342,19 @@ namespace BBStats.Migrations
             modelBuilder.Entity("BBStats.Data.Entites.PlayerGame", b =>
                 {
                     b.Property<long>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<int>("GameId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("CharacterId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("EloAfter")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<double>("EloBefore")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("PlayerId", "GameId", "CharacterId");
 
@@ -364,13 +372,13 @@ namespace BBStats.Migrations
                     b.HasOne("BBStats.Data.Entites.Character", "CharacterA")
                         .WithMany()
                         .HasForeignKey("CharacterAId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BBStats.Data.Entites.Character", "CharacterB")
                         .WithMany()
                         .HasForeignKey("CharacterBId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CharacterA");
@@ -383,13 +391,13 @@ namespace BBStats.Migrations
                     b.HasOne("BBStats.Data.Entites.Character", "CharacterA")
                         .WithMany()
                         .HasForeignKey("CharacterAId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BBStats.Data.Entites.Character", "CharacterB")
                         .WithMany()
                         .HasForeignKey("CharacterBId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CharacterA");
@@ -414,19 +422,19 @@ namespace BBStats.Migrations
                     b.OwnsOne("BBStats.Data.Rating", "PlayerRating", b1 =>
                         {
                             b1.Property<long>("PlayerCharacterStatPlayerId")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("bigint");
 
                             b1.Property<int>("PlayerCharacterStatCharacterId")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("int");
 
                             b1.Property<double>("CurrentRating")
-                                .HasColumnType("REAL");
+                                .HasColumnType("float");
 
                             b1.Property<double>("RatingDeviation")
-                                .HasColumnType("REAL");
+                                .HasColumnType("float");
 
                             b1.Property<double>("Volatility")
-                                .HasColumnType("REAL");
+                                .HasColumnType("float");
 
                             b1.HasKey("PlayerCharacterStatPlayerId", "PlayerCharacterStatCharacterId");
 
@@ -449,7 +457,7 @@ namespace BBStats.Migrations
                     b.HasOne("BBStats.Data.Entites.Character", "Character")
                         .WithMany()
                         .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BBStats.Data.Entites.Game", "Game")
@@ -467,7 +475,7 @@ namespace BBStats.Migrations
                     b.HasOne("BBStats.Data.Entites.PlayerCharacterStat", null)
                         .WithMany("Games")
                         .HasForeignKey("PlayerId", "CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Character");
