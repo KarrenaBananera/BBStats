@@ -56,6 +56,9 @@ public class AppDbContext : DbContext
 				.HasMaxLength(64)
 				.IsRequired();
 
+			entity.HasIndex(g => g.ReplayId)
+				.IsUnique();
+
 			entity.Property(g => g.PlayedAt)
 				.HasConversion(
 					v => ToStoredUtc(v),

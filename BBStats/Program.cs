@@ -14,7 +14,9 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AddPageRoute("/Top", "Top");
     options.Conventions.AddPageRoute("/Top", "Top/Index");
 });
-builder.Services.AddSingleton<IGamesParser, FilteredGamesParser>();
+builder.Services.AddSingleton<FilteredGamesParser>();
+builder.Services.AddSingleton<IGamesParser>(sp => sp.GetRequiredService<FilteredGamesParser>());
+builder.Services.AddHostedService(sp => sp.GetRequiredService<FilteredGamesParser>());
 builder.Services.AddTransient<IGamesRepository,GameRepository>();
 builder.Services.AddScoped<ICharacterStatisticsService, CharacterStatisticsService>();
 builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
