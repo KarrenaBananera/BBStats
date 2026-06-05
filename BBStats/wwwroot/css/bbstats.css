@@ -466,6 +466,26 @@ header nav ul {
   transform: none;
 }
 
+.nav-dropdown-item-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-dropdown-character-icon {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-dropdown-character-icon {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+}
+
 @media (min-width: 576px) {
   .nav-dropdown-menu {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -779,11 +799,21 @@ tbody tr:last-child td:last-child {
 }
 
 .profile-char-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.profile-char-icon {
+  width: 2em;
+  height: 2em;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .profile-char-meta {
@@ -865,7 +895,17 @@ tbody tr:last-child td:last-child {
 }
 
 .series-opp-char {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   opacity: 0.85;
+}
+
+.series-character-icon {
+  width: 2em;
+  height: 2em;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .series-result {

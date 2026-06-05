@@ -14,7 +14,15 @@
                         <a asp-page="/Characters/Index"
                            asp-route-character="@slug"
                            class="nav-dropdown-item"
-                           role="menuitem">@character.Name</a>
+                           role="menuitem">
+                            <span class="nav-dropdown-item-label">
+                                <img src="@CharacterImages.GetSmallIconUrl(character.Name)"
+                                     alt=""
+                                     class="nav-dropdown-character-icon"
+                                     loading="lazy" />
+                                @character.Name
+                            </span>
+                        </a>
                     }
                 </div>
             </li>
@@ -29,7 +37,15 @@
                         <a asp-page="/Statistics/Index"
                            asp-route-character="@slug"
                            class="nav-dropdown-item"
-                           role="menuitem">@character.Name</a>
+                           role="menuitem">
+                            <span class="nav-dropdown-item-label">
+                                <img src="@CharacterImages.GetSmallIconUrl(character.Name)"
+                                     alt=""
+                                     class="nav-dropdown-character-icon"
+                                     loading="lazy" />
+                                @character.Name
+                            </span>
+                        </a>
                     }
                 </div>
             </li>

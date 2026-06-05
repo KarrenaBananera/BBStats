@@ -7,7 +7,13 @@
                asp-route-steamId="@Model.SteamId"
                asp-route-character="@character.Slug"
                class="profile-char-link @(character.IsActive ? "active" : null)">
-                <span class="profile-char-name">@character.DisplayName</span>
+                <span class="profile-char-name">
+                    <img src="@CharacterImages.GetSmallIconUrl(character.DisplayName)"
+                         alt=""
+                         class="profile-char-icon"
+                         loading="lazy" />
+                    @character.DisplayName
+                </span>
                 <span class="profile-char-meta">@character.Games games · @character.Rating</span>
             </a>
         }

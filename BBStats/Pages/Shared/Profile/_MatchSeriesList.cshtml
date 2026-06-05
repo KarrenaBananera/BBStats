@@ -11,7 +11,13 @@
                        asp-route-steamId="@series.OpponentSteamId"
                        asp-route-character="@series.OpponentCharacterSlug"
                        class="series-opponent">@series.OpponentName</a>
-                    <span class="series-opp-char">@series.OpponentCharacterDisplay</span>
+                    <span class="series-opp-char">
+                        @series.OpponentCharacterDisplay
+                        <img src="@CharacterImages.GetSmallIconUrl(series.OpponentCharacterDisplay)"
+                             alt=""
+                             class="series-character-icon"
+                             loading="lazy" />
+                    </span>
                     <span class="series-result @series.SeriesScoreCss">@series.SeriesScore</span>
                     <span class="series-main-row-end">
                         <span class="series-rating-delta @series.RatingDeltaCss">@series.RatingDelta</span>
