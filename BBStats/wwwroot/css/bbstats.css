@@ -912,6 +912,10 @@ tbody tr:last-child td:last-child {
   color: rgba(255, 255, 255, 0.55);
 }
 
+.series-game-rating-delta {
+  font-weight: 600;
+}
+
 .series-game-outcome {
   font-weight: 600;
 }

@@ -151,7 +151,7 @@ public static class PlayerProfileMock
         IReadOnlyList<(string Outcome, string Css)> games)
     {
         var rows = games
-            .Select((g, i) => new GameResultRow(i + 1, g.Outcome, g.Css, playedAtUtc))
+            .Select((g, i) => new GameResultRow(i + 1, g.Outcome, g.Css, playedAtUtc, "0", "text-muted"))
             .ToList();
 
         var downloadUrls = rows

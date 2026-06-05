@@ -238,12 +238,15 @@ public class PlayerProfileService : IPlayerProfileService
 	private GameResultRow MapGameRow(PlayerGameContext game, int number)
 	{
 		var (openUrl, downloadUrl) = GameReplayLink.Build(game.Game.ReplayId, _urlForFront);
+		var (ratingDeltaText, ratingDeltaCss) = FormatRatingDelta(game.RatingDelta);
 
 		return new GameResultRow(
 			number,
 			game.Won ? "Win" : "Loss",
 			game.Won ? "text-success" : "text-danger",
 			AsUtc(game.PlayedAt),
+			ratingDeltaText,
+			ratingDeltaCss,
 			openUrl,
 			downloadUrl);
 	}

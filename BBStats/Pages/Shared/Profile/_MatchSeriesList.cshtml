@@ -26,6 +26,7 @@
                         <span>Game @game.Number</span>
                         <span class="series-game-date"><partial name="Shared/_UtcDateTime" model="game.PlayedAtUtc" /></span>
                         <span class="series-game-row-end">
+                            <span class="series-game-rating-delta @game.RatingDeltaCss">@game.RatingDelta</span>
                             <span class="@game.OutcomeCss series-game-outcome">@game.Outcome</span>
                             @if (hasOpen)
                             {

@@ -12,6 +12,8 @@ public record GameResultRow(
 	string Outcome,
 	string OutcomeCss,
 	DateTime PlayedAtUtc,
+	string RatingDelta,
+	string RatingDeltaCss,
 	string? ReplayOpenUrl = null,
 	string? ReplayDownloadUrl = null);
 
