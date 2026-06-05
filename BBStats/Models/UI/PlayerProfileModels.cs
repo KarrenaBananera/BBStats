@@ -30,6 +30,27 @@ public record MatchSeriesViewModel(
     IReadOnlyList<GameResultRow> Games,
     IReadOnlyList<string> ReplayDownloadUrls);
 
+public record MostPlayedOpponentRow(
+	string OpponentName,
+	string OpponentSteamId,
+	string OpponentCharacterSlug,
+	int Games,
+	double WinratePercent,
+	string WinrateCss);
+
+public record PlayerCharacterMatchupRow(
+	string CharacterName,
+	string CharacterSlug,
+	int Games,
+	double WinratePercent,
+	string WinrateCss);
+
+public class PlayerCharacterStatsViewModel
+{
+	public IReadOnlyList<MostPlayedOpponentRow> MostPlayedOpponents { get; init; } = [];
+	public IReadOnlyList<PlayerCharacterMatchupRow> CharacterMatchups { get; init; } = [];
+}
+
 public class PlayerProfilePageViewModel
 {
     public string PlayerName { get; init; } = "";

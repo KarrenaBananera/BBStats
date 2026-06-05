@@ -10,6 +10,17 @@
         <partial name="Profile/_CharacterSidebar" model="Model.Profile" />
     </div>
 
+    @if (Model.Profile.Characters.Any(c => c.IsActive && c.Games > 0))
+    {
+        <div class="row mt-3">
+            <div class="col-12">
+                <div id="player-character-stats"
+                     data-stats-url="@Url.Page("/Player/CharacterStats", new { steamId = Model.Profile.SteamId, character = Model.Profile.CharacterSlug })">
+                </div>
+            </div>
+        </div>
+    }
+
     <div class="row mt-3">
         <div class="col-12">
             <div class="secondLevelDiv">
@@ -32,3 +43,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/player-stats.js" asp-append-version="true"></script>
+}

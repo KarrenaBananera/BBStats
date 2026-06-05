@@ -1,0 +1,6 @@
+@page "/player/{steamId}/{character}/stats"
+@model BBStats.Pages.Player.CharacterStatsModel
+@{
+    Layout = null;
+}
+<partial name="Profile/_CharacterStatsTables" model="Model.Stats" />

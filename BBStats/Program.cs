@@ -19,6 +19,7 @@ builder.Services.AddTransient<IGamesRepository,GameRepository>();
 builder.Services.AddScoped<ICharacterStatisticsService, CharacterStatisticsService>();
 builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
 builder.Services.AddScoped<IPlayerProfileService, PlayerProfileService>();
+builder.Services.AddScoped<IPlayerCharacterStatsService, PlayerCharacterStatsService>();
 builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
 
 

@@ -1,4 +1,4 @@
-﻿using BBStats.Data.Entites;
+using BBStats.Data.Entites;
 using BBStats.Services;
 using Microsoft.EntityFrameworkCore;
 

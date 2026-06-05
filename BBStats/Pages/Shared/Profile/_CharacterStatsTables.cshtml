@@ -1,0 +1,93 @@
+@model PlayerCharacterStatsViewModel
+<div class="profile-stats-section">
+    <div class="secondLevelDiv profile-stats-panel">
+        <button type="button" class="profile-stats-summary" aria-expanded="false">
+            <i class="bi bi-chevron-right profile-stats-chevron" aria-hidden="true"></i>
+            <span class="profile-stats-title">Most played</span>
+        </button>
+        <div class="profile-stats-content">
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="left">Player</th>
+                            <th class="right">Games</th>
+                            <th class="right">Winrate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.MostPlayedOpponents.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="3" class="left text-muted">No matchup data yet.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var row in Model.MostPlayedOpponents)
+                            {
+                                <tr>
+                                    <td class="left">
+                                        <a asp-page="/Player/Index"
+                                           asp-route-steamId="@row.OpponentSteamId"
+                                           asp-route-character="@row.OpponentCharacterSlug"
+                                           class="top-player-link">@row.OpponentName</a>
+                                    </td>
+                                    <td class="right">@row.Games.ToString("N0")</td>
+                                    <td class="right @row.WinrateCss">@row.WinratePercent.ToString("0.#")%</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondLevelDiv profile-stats-panel">
+        <button type="button" class="profile-stats-summary" aria-expanded="false">
+            <i class="bi bi-chevron-right profile-stats-chevron" aria-hidden="true"></i>
+            <span class="profile-stats-title">Matchups</span>
+        </button>
+        <div class="profile-stats-content">
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="left">Character</th>
+                            <th class="right">Games</th>
+                            <th class="right">Winrate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.CharacterMatchups.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="3" class="left text-muted">No matchup data yet.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var row in Model.CharacterMatchups)
+                            {
+                                <tr>
+                                    <td class="left">
+                                        <span class="profile-stats-character">
+                                            <img src="@CharacterImages.GetSmallIconUrl(row.CharacterName)"
+                                                 alt=""
+                                                 class="profile-stats-character-icon"
+                                                 loading="lazy" />
+                                            @row.CharacterName
+                                        </span>
+                                    </td>
+                                    <td class="right">@row.Games.ToString("N0")</td>
+                                    <td class="right @row.WinrateCss">@row.WinratePercent.ToString("0.#")%</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
