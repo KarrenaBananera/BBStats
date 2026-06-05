@@ -1,6 +1,7 @@
 {
   "GamesFetcher": {
-    "BaseUrl": "http://89.167.76.6:2000/",
+    "BaseUrl": "http://89.167.76ы.6:2000/",
+    "UrlForFront": "89.167.76.6:5000",
     "Enabled": true,
     "FetchIntervalSeconds": 60
   }

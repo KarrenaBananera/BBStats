@@ -1,7 +1,9 @@
+using BBStats.Configuration;
 using BBStats.Data;
 using BBStats.Data.Entites;
 using BBStats.Models.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace BBStats.Services;
 
@@ -10,10 +12,12 @@ public class PlayerProfileService : IPlayerProfileService
 	private const int SetsPerPage = 10;
 
 	private readonly AppDbContext _dbContext;
+	private readonly string _urlForFront;
 
-	public PlayerProfileService(AppDbContext dbContext)
+	public PlayerProfileService(AppDbContext dbContext, IOptions<GamesFetcherOptions> gamesFetcherOptions)
 	{
 		_dbContext = dbContext;
+		_urlForFront = gamesFetcherOptions.Value.UrlForFront;
 	}
 
 	public async Task<PlayerProfileResult> GetProfileAsync(
@@ -192,7 +196,7 @@ public class PlayerProfileService : IPlayerProfileService
 		return sets;
 	}
 
-	private static SeriesViewModelData BuildSeriesViewModel(List<PlayerGameContext> setGames)
+	private SeriesViewModelData BuildSeriesViewModel(List<PlayerGameContext> setGames)
 	{
 		var firstGame = setGames[0];
 		var wins = setGames.Count(g => g.Won);
@@ -231,9 +235,9 @@ public class PlayerProfileService : IPlayerProfileService
 				downloadUrls));
 	}
 
-	private static GameResultRow MapGameRow(PlayerGameContext game, int number)
+	private GameResultRow MapGameRow(PlayerGameContext game, int number)
 	{
-		var (openUrl, downloadUrl) = GameReplayLink.Parse(game.Game.GameUrl);
+		var (openUrl, downloadUrl) = GameReplayLink.Build(game.Game.ReplayId, _urlForFront);
 
 		return new GameResultRow(
 			number,

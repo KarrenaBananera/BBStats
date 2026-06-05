@@ -7,7 +7,7 @@ public class FilteredGamesParser : IGamesParser
 	private readonly GamesParser _parser = new();
 	private readonly object _sync = new();
 	private readonly Queue<string> _seenOrder = new();
-	private readonly HashSet<string> _seenUrls = new(StringComparer.Ordinal);
+	private readonly HashSet<string> _seenReplayIds = new(StringComparer.Ordinal);
 
 	public List<GameDTO> Parse(string data)
 	{
@@ -16,7 +16,7 @@ public class FilteredGamesParser : IGamesParser
 
 		foreach (var game in games)
 		{
-			if (TryRegister(game.GameUrl))
+			if (TryRegister(game.ReplayId))
 			{
 				result.Add(game);
 			}
@@ -25,21 +25,21 @@ public class FilteredGamesParser : IGamesParser
 		return result;
 	}
 
-	private bool TryRegister(string gameUrl)
+	private bool TryRegister(string replayId)
 	{
 		lock (_sync)
 		{
-			if (!_seenUrls.Add(gameUrl))
+			if (!_seenReplayIds.Add(replayId))
 			{
 				return false;
 			}
 
-			_seenOrder.Enqueue(gameUrl);
+			_seenOrder.Enqueue(replayId);
 
 			while (_seenOrder.Count > MaxSeenGames)
 			{
 				var oldest = _seenOrder.Dequeue();
-				_seenUrls.Remove(oldest);
+				_seenReplayIds.Remove(oldest);
 			}
 
 			return true;

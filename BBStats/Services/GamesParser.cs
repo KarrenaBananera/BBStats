@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using BBStats.Data;
 using Newtonsoft.Json.Linq;
 
@@ -50,6 +50,11 @@ public class GamesParser
 			var playedAt = ParsePlayedAtUtc(rowDict["upload_datetime_"]!.ToString());
 
 			var replayUrl = rowDict["open"]?["props"]?["href"]?.ToString();
+			var replayId = GameReplayLink.ExtractReplayId(replayUrl);
+			if (string.IsNullOrWhiteSpace(replayId))
+			{
+				continue;
+			}
 
 			result.Add(new GameDTO
 			{
@@ -57,7 +62,7 @@ public class GamesParser
 				PlayerB = playerBName!,
 				PlayerAId = rowDict["p1_steamid64"]!.Value<long>(),
 				PlayerBId = rowDict["p2_steamid64"]!.Value<long>(),
-				GameUrl = replayUrl!,
+				ReplayId = replayId,
 				PlayedAt = playedAt,
 				IsPlayerAWin = winner == 0,
 				CharacterAId = CharactersSeed.CharactersNames[characterAName!.ToLower()],

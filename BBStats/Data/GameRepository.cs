@@ -119,7 +119,7 @@ public class GameRepository : IGamesRepository
 		if (String.IsNullOrWhiteSpace(game.PlayerA) || String.IsNullOrWhiteSpace(game.PlayerB))
 			return false;
 
-		if (String.IsNullOrWhiteSpace(game.GameUrl))
+		if (String.IsNullOrWhiteSpace(game.ReplayId))
 			return false;
 
 		return true;
@@ -185,7 +185,7 @@ public class GameRepository : IGamesRepository
 		{
 			CharacterAId = game.CharacterAId,
 			CharacterBId = game.CharacterBId,
-			GameUrl = game.GameUrl,
+			ReplayId = game.ReplayId,
 			IsPlayerAWin = game.IsPlayerAWin,
 			PlayerAId = game.PlayerAId,
 			PlayerBId = game.PlayerBId,

@@ -50,6 +50,12 @@ if (gamesFetcherOptions.Enabled && string.IsNullOrWhiteSpace(gamesFetcherOptions
 		"GamesFetcher:BaseUrl is not configured. Set it in games-fetcher.json.");
 }
 
+if (string.IsNullOrWhiteSpace(gamesFetcherOptions.UrlForFront))
+{
+	throw new InvalidOperationException(
+		"GamesFetcher:UrlForFront is not configured. Set it in games-fetcher.json.");
+}
+
 if (gamesFetcherOptions.FetchIntervalSeconds < 1)
 {
 	throw new InvalidOperationException(

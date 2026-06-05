@@ -52,6 +52,10 @@ public class AppDbContext : DbContext
 
 		modelBuilder.Entity<Game>(entity =>
 		{
+			entity.Property(g => g.ReplayId)
+				.HasMaxLength(64)
+				.IsRequired();
+
 			entity.Property(g => g.PlayedAt)
 				.HasConversion(
 					v => ToStoredUtc(v),

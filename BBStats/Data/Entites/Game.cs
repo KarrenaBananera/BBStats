@@ -13,7 +13,8 @@ public class Game
 	public string PlayerB { get; set; }
 	public Int64 PlayerAId { get; set; }
 	public Int64 PlayerBId { get; set; }	
-	public string GameUrl { get; set; }	
+	[MaxLength(64)]
+	public string ReplayId { get; set; }	
 	public DateTime PlayedAt { get; set; }
 	public bool IsPlayerAWin { get; set; }
 
