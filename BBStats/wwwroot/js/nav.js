@@ -1,4 +1,21 @@
 (function () {
+    function setDropdownOpen(dropdown, isOpen) {
+        dropdown.classList.toggle('is-open', isOpen);
+
+        var toggle = dropdown.querySelector('.nav-dropdown-toggle');
+        if (toggle) {
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+    }
+
+    function closeAllDropdowns(except) {
+        document.querySelectorAll('[data-nav-dropdown].is-open').forEach(function (dropdown) {
+            if (dropdown !== except) {
+                setDropdownOpen(dropdown, false);
+            }
+        });
+    }
+
     document.querySelectorAll('[data-nav-dropdown]').forEach(function (dropdown) {
         var toggle = dropdown.querySelector('.nav-dropdown-toggle');
         if (!toggle) {
@@ -7,8 +24,13 @@
 
         toggle.addEventListener('click', function (e) {
             e.stopPropagation();
-            var isOpen = dropdown.classList.toggle('is-open');
-            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+            var willOpen = !dropdown.classList.contains('is-open');
+            if (willOpen) {
+                closeAllDropdowns(dropdown);
+            }
+
+            setDropdownOpen(dropdown, willOpen);
         });
     });
 
@@ -17,13 +39,7 @@
             return;
         }
 
-        document.querySelectorAll('[data-nav-dropdown].is-open').forEach(function (dropdown) {
-            dropdown.classList.remove('is-open');
-            var toggle = dropdown.querySelector('.nav-dropdown-toggle');
-            if (toggle) {
-                toggle.setAttribute('aria-expanded', 'false');
-            }
-        });
+        closeAllDropdowns();
     });
 
     document.addEventListener('keydown', function (e) {
@@ -31,12 +47,6 @@
             return;
         }
 
-        document.querySelectorAll('[data-nav-dropdown].is-open').forEach(function (dropdown) {
-            dropdown.classList.remove('is-open');
-            var toggle = dropdown.querySelector('.nav-dropdown-toggle');
-            if (toggle) {
-                toggle.setAttribute('aria-expanded', 'false');
-            }
-        });
+        closeAllDropdowns();
     });
 })();
