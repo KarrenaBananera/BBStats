@@ -10,6 +10,7 @@ namespace BBStats.Services;
 public class PlayerProfileService : IPlayerProfileService
 {
 	private const int SetsPerPage = 10;
+	private static readonly TimeSpan MaxSetGap = TimeSpan.FromMinutes(20);
 
 	private readonly AppDbContext _dbContext;
 	private readonly string _urlForFront;
@@ -171,6 +172,18 @@ public class PlayerProfileService : IPlayerProfileService
 			game.PlayedAt);
 	}
 
+	private static bool BelongsToSameSet(PlayerGameContext previous, PlayerGameContext current)
+	{
+		if (current.OpponentId != previous.OpponentId ||
+		    current.OpponentCharacterId != previous.OpponentCharacterId)
+		{
+			return false;
+		}
+
+		var gap = current.PlayedAt - previous.PlayedAt;
+		return gap >= TimeSpan.Zero && gap < MaxSetGap;
+	}
+
 	private static List<List<PlayerGameContext>> GroupIntoSets(IReadOnlyList<PlayerGameContext> gamesInOrder)
 	{
 		var sets = new List<List<PlayerGameContext>>();
@@ -181,8 +194,7 @@ public class PlayerProfileService : IPlayerProfileService
 			var previous = gamesInOrder[i - 1];
 			var current = gamesInOrder[i];
 
-			if (current.OpponentId == previous.OpponentId &&
-			    current.OpponentCharacterId == previous.OpponentCharacterId)
+			if (BelongsToSameSet(previous, current))
 			{
 				currentSet.Add(current);
 				continue;
