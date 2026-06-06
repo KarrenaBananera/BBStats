@@ -39,5 +39,5 @@ public class IndexModel : PageModel
 	}
 
 	public string? GetPageUrl(int page) =>
-		page <= 1 ? Url.Page("/Top/Index") : Url.Page("/Top/Index", new { page });
+		page <= 1 ? Url.Page("/Top/Index") : Url.Page("/Top/Index", new { page = page });
 }

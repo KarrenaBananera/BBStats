@@ -55,5 +55,5 @@ public class IndexModel : PageModel
 	public string? GetPageUrl(int page) =>
 		page <= 1
 			? Url.Page("/Characters/Index", new { character = Character })
-			: Url.Page("/Characters/Index", new { character = Character, page });
+			: Url.Page("/Characters/Index", new { character = Character, page = page });
 }

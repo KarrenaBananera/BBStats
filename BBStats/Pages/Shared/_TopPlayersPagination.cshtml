@@ -1,11 +1,12 @@
 @model TopPageViewModel
 @{
-    var getPageUrl = ViewData["GetPageUrl"] as Func<int, string?>;
+    var previousUrl = ViewData["PreviousPageUrl"] as string;
+    var nextUrl = ViewData["NextPageUrl"] as string;
 }
 <div class="pagination-container">
-    @if (Model.HasPreviousPage && getPageUrl is not null)
+    @if (Model.HasPreviousPage && !string.IsNullOrEmpty(previousUrl))
     {
-        <a href="@getPageUrl(Model.PageNumber - 1)" class="tableButton" aria-label="Previous page">&lt;</a>
+        <a href="@previousUrl" class="tableButton" aria-label="Previous page">&lt;</a>
     }
     else
     {
@@ -14,9 +15,9 @@
 
     <span class="page-info mx-4">@Model.PageNumber</span>
 
-    @if (Model.HasNextPage && getPageUrl is not null)
+    @if (Model.HasNextPage && !string.IsNullOrEmpty(nextUrl))
     {
-        <a href="@getPageUrl(Model.PageNumber + 1)" class="tableButton" aria-label="Next page">&gt;</a>
+        <a href="@nextUrl" class="tableButton" aria-label="Next page">&gt;</a>
     }
     else
     {
