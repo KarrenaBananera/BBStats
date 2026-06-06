@@ -1,4 +1,4 @@
-﻿using BBStats.Data;
+using BBStats.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

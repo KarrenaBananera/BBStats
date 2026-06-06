@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.OutputCaching;
 
 namespace BBStats.Pages.Player;
 
-[OutputCache(Duration = 180)]
+[OutputCache(Duration = 180, VaryByRouteValueNames = ["steamId", "character", "matchPage"])]
 public class IndexModel : PageModel
 {
 	private readonly IPlayerProfileService _playerProfileService;
@@ -43,7 +43,7 @@ public class IndexModel : PageModel
 
 		if (result.RedirectCharacterSlug is not null)
 		{
-			return RedirectToPage(new { steamId = SteamId, character = result.RedirectCharacterSlug });
+			return RedirectToPage(new { steamId = SteamId, character = result.RedirectCharacterSlug, matchPage = (int?)null });
 		}
 
 		if (result.Profile is null)
@@ -57,7 +57,7 @@ public class IndexModel : PageModel
 			{
 				steamId = SteamId,
 				character = result.Profile.CharacterSlug,
-				matchPage = result.Profile.TotalPages
+				matchPage = result.Profile.TotalPages <= 1 ? (int?)null : result.Profile.TotalPages
 			});
 		}
 

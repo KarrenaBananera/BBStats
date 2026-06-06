@@ -8,7 +8,7 @@ public static class PlayerPageUrl
     {
         if (page <= 1)
         {
-            return url.Page("/Player/Index", new { steamId, character });
+            return url.Page("/Player/Index", new { steamId, character, matchPage = (int?)null });
         }
 
         return url.Page("/Player/Index", new { steamId, character, matchPage = page });

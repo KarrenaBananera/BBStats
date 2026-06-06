@@ -20,9 +20,6 @@ public class IndexModel : PageModel
 	[BindProperty(SupportsGet = true)]
 	public string? Character { get; set; }
 
-	[BindProperty(SupportsGet = true, Name = "page")]
-	public int PageNumber { get; set; } = 1;
-
 	public string CharacterDisplayName { get; private set; } = "";
 
 	public TopPageViewModel Top { get; private set; } = new();
@@ -37,23 +34,23 @@ public class IndexModel : PageModel
 
 		CharacterDisplayName = CharactersSeed.All.First(c => c.Id == characterId).Name;
 
-		if (PageNumber < 1)
+		var pageNumber = PaginationQuery.ReadPageNumber(Request);
+
+		if (pageNumber < 1)
 		{
-			return RedirectToPage(new { character = slug, page = 1 });
+			return Redirect(PageQueryUrl.WithQueryPage(Url, "/Characters/Index", 1, new { character = slug })!);
 		}
 
-		Top = await _topPlayersService.GetPageAsync(PageNumber, characterId, cancellationToken);
+		Top = await _topPlayersService.GetPageAsync(pageNumber, characterId, cancellationToken);
 
-		if (PageNumber > Top.TotalPages && Top.TotalPages > 0)
+		if (pageNumber > Top.TotalPages && Top.TotalPages > 0)
 		{
-			return RedirectToPage(new { character = slug, page = Top.TotalPages });
+			return Redirect(PageQueryUrl.WithQueryPage(Url, "/Characters/Index", Top.TotalPages, new { character = slug })!);
 		}
 
 		return Page();
 	}
 
 	public string? GetPageUrl(int page) =>
-		page <= 1
-			? Url.Page("/Characters/Index", new { character = Character })
-			: Url.Page("/Characters/Index", new { character = Character, page = page });
+		PageQueryUrl.WithQueryPage(Url, "/Characters/Index", page, new { character = Character });
 }
