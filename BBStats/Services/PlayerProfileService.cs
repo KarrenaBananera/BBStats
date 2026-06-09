@@ -87,6 +87,7 @@ public class PlayerProfileService : IPlayerProfileService
 				stat.Character.Name,
 				stat.Wins + stat.Losses,
 				(int)Math.Round(stat.PlayerRating.CurrentRating),
+				(int)Math.Round(stat.PlayerRating.RatingDeviation),
 				stat.CharacterId == characterId))
 			.ToList();
 

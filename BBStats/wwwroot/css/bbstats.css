@@ -839,6 +839,16 @@ tbody tr:last-child td:last-child {
   white-space: nowrap;
 }
 
+.profile-char-elo {
+  font-weight: 600;
+  color: white;
+}
+
+.profile-char-elo-deviation {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+}
+
 .profile-stats-section {
   display: grid;
   gap: 1rem;

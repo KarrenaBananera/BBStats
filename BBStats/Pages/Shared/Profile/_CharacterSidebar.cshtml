@@ -14,7 +14,10 @@
                          loading="lazy" />
                     @character.DisplayName
                 </span>
-                <span class="profile-char-meta">@character.Games games · @character.Rating</span>
+                <span class="profile-char-meta">
+                    @character.Games games ·
+                    <span class="profile-char-elo">@character.Rating <span class="profile-char-elo-deviation">± @character.RatingDeviation</span></span>
+                </span>
             </a>
         }
     </div>

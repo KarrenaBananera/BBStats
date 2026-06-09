@@ -5,6 +5,7 @@ public record CharacterSidebarItem(
     string DisplayName,
     int Games,
     int Rating,
+    int RatingDeviation,
     bool IsActive);
 
 public record GameResultRow(
