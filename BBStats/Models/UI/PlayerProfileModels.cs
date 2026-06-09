@@ -61,6 +61,10 @@ public class PlayerProfilePageViewModel
     public int CharacterRank { get; init; }
     public int Rating { get; init; }
     public int RatingDeviation { get; init; }
+    public int Wins { get; init; }
+    public int Losses { get; init; }
+    public double WinratePercent { get; init; }
+    public string WinrateCss { get; init; } = "text-muted";
     public IReadOnlyList<CharacterSidebarItem> Characters { get; init; } = [];
     public IReadOnlyList<MatchSeriesViewModel> Series { get; init; } = [];
     public int CurrentPage { get; init; } = 1;

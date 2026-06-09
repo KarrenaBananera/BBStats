@@ -765,6 +765,23 @@ tbody tr:last-child td:last-child {
   font-size: 0.95rem;
 }
 
+.profile-record {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.profile-record-sep {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+@media (min-width: 768px) {
+  .profile-rankings .profile-record {
+    flex-basis: 100%;
+  }
+}
+
 .profile-characters-panel {
   display: flex;
   flex-direction: column;
