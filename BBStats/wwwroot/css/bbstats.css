@@ -513,32 +513,41 @@ table {
   overflow: hidden;
 }
 
+.table-scroll,
+.profile-characters-panel {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #495057 #111214;
+}
+
 .table-scroll {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: #495057 #111214;
   padding-bottom: 0.25rem;
 }
 
-.table-scroll::-webkit-scrollbar {
+.table-scroll::-webkit-scrollbar,
+.profile-characters-panel::-webkit-scrollbar {
+  width: 8px;
   height: 8px;
 }
 
-.table-scroll::-webkit-scrollbar-track {
+.table-scroll::-webkit-scrollbar-track,
+.profile-characters-panel::-webkit-scrollbar-track {
   background: #111214;
   border-radius: 999px;
 }
 
-.table-scroll::-webkit-scrollbar-thumb {
+.table-scroll::-webkit-scrollbar-thumb,
+.profile-characters-panel::-webkit-scrollbar-thumb {
   background-color: #495057;
   border-radius: 999px;
   border: 2px solid #111214;
 }
 
-.table-scroll::-webkit-scrollbar-thumb:hover {
+.table-scroll::-webkit-scrollbar-thumb:hover,
+.profile-characters-panel::-webkit-scrollbar-thumb:hover {
   background-color: #6c757d;
 }
 
@@ -788,6 +797,7 @@ tbody tr:last-child td:last-child {
   gap: 0;
   max-height: 280px;
   overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .profile-char-link {
