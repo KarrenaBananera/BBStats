@@ -1042,6 +1042,12 @@ tbody tr:last-child td:last-child {
   gap: 0.5rem;
 }
 
+@media (max-width: 767.98px) {
+  .series-game-links {
+    display: none;
+  }
+}
+
 .series-replay-open {
   display: inline;
 }
