@@ -87,10 +87,7 @@ else
     app.UseExceptionHandler("/Error");
 }
 
-app.UseStaticFiles(new StaticFileOptions
-{
-	OnPrepareResponse = StaticFileCacheHeaders.ApplyLongTermImageCache
-});
+app.UseStaticFiles();
 app.UseRouting();
 app.UseOutputCache();
 app.UseAuthorization();
