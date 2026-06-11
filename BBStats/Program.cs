@@ -33,7 +33,7 @@ builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
 builder.Services.AddScoped<IPlayerProfileService, PlayerProfileService>();
 builder.Services.AddScoped<IPlayerCharacterStatsService, PlayerCharacterStatsService>();
 builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
-
+builder.Services.AddAuthorization(); // just adding it explicity
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -99,9 +99,10 @@ else
 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseOutputCache();
 app.UseAuthentication(); // Enable authentication middleware to handle authentication for admin pages
 app.UseAuthorization();
+
+app.UseOutputCache(); // safer ordering so admin pages are no cached
 app.MapRazorPages();
 
 app.Run();

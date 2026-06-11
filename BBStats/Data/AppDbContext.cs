@@ -41,6 +41,9 @@ public class AppDbContext : DbContext
 		modelBuilder.Entity<Player>(entity =>
 		{
 			entity.Property(p => p.Id).ValueGeneratedNever();
+			// automatically exclude ignored players from all public queries
+			entity.HasQueryFilter(p =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == p.Id));
 		});
 
 		modelBuilder.Entity<PlayerCharacterStat>(entity =>
@@ -64,6 +67,9 @@ public class AppDbContext : DbContext
 			//	  .HasPrincipalKey(ps => new { ps.PlayerId, ps.CharacterId });
 
 			entity.OwnsOne(x => x.PlayerRating);
+			// automatically exclude ignored players from all public queries
+			entity.HasQueryFilter(ps =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == ps.PlayerId));
 		});
 
 		modelBuilder.Entity<Game>(entity =>
@@ -86,6 +92,10 @@ public class AppDbContext : DbContext
 				.WithMany()
 				.HasForeignKey(g => g.CharacterBId)
 				.OnDelete(DeleteBehavior.Restrict);
+			// automatically exclude ignored players from all public queries			
+			entity.HasQueryFilter(g =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerAId) &&
+				!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerBId));
 		});
 
 		modelBuilder.Entity<Matchup>(entity =>
@@ -126,7 +136,11 @@ public class AppDbContext : DbContext
 				  .WithMany(ps => ps.Games)
 				  .HasForeignKey(pg => new { pg.PlayerId, pg.CharacterId })
 				  .OnDelete(DeleteBehavior.Restrict);
-
+			// automatically exclude ignored players from all public queries
+			entity.HasQueryFilter(pg =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == pg.PlayerId) &&
+				!IgnoredPlayers.Any(ip => ip.PlayerId == pg.Game.PlayerAId) &&
+				!IgnoredPlayers.Any(ip => ip.PlayerId == pg.Game.PlayerBId));
 		});
 	}
 
