@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
 	public DbSet<Matchup> Matchups => Set<Matchup>();
 	public DbSet<Player> Players => Set<Player>();
 	public DbSet<PlayerCharacterStat> PlayersCharactersStats => Set<PlayerCharacterStat>();
-    //  We need to maintain a list of ignored players to prevent them from being added back to the database after deleting them and to prevent them from being added to the database when adding new games
+    //  For storing players that should be ignored from all public queries
 	public DbSet<IgnoredPlayer> IgnoredPlayers => Set<IgnoredPlayer>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)

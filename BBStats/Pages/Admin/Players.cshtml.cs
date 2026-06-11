@@ -24,10 +24,10 @@ public class PlayersModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostDeletePlayerAsync(Int64 id)
+    public async Task<IActionResult> OnPostIgnorePlayerAsync(Int64 id)
     {
 
-        // Remove the player and all their games from the database
+        // Add the player to the ignored players list, which will automatically exclude them from all public queries
         var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == id);
 
         if (player == null) 
@@ -40,12 +40,11 @@ public class PlayersModel : PageModel
             _dbContext.IgnoredPlayers.Add(new IgnoredPlayer
             {
                 PlayerId = player.Id,
-                Reason = "Deleted by admin"
+                Reason = "Ignored by admin"
             });
+            await _dbContext.SaveChangesAsync();
         }
         
-        _dbContext.Players.Remove(player);
-        await _dbContext.SaveChangesAsync();
         return RedirectToPage();
     }
 

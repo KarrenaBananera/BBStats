@@ -26,7 +26,7 @@ public class IgnoredPlayersModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteIgnoredPlayerAsync(Int64 id)
     {
-        // Remove the ignored player from the database
+        // Unignore the player by removing their ignored-player entry
         var ignoredPlayer = await _dbContext.IgnoredPlayers.FirstOrDefaultAsync(x => x.PlayerId == id);
 
         if (ignoredPlayer == null) 
