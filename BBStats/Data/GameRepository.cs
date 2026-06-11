@@ -17,6 +17,15 @@ public class GameRepository : IGamesRepository
 
 	public async Task<bool> AddGameAsync(GameDTO game)
 	{
+		// do not add the game if one of the players is ignored which means they were deleted
+		var isIgnored = await _dbContext.IgnoredPlayers.AnyAsync(x =>
+			x.PlayerId == game.PlayerAId || x.PlayerId == game.PlayerBId);
+
+		if (isIgnored)
+		{
+			return false;
+		}
+
 		if (!IsGameValid(game))
 			return false;
 			
@@ -108,6 +117,16 @@ public class GameRepository : IGamesRepository
 			matchupDb.WinsA++;
 		else
 			matchupDb.WinsB++;
+	}
+	// For removing a player and all their games
+	private async Task RemovePlayerAsync(Int64 playerId)
+	{
+		var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == playerId);
+		if (player != null)
+		{
+			_dbContext.Players.Remove(player);
+			await _dbContext.SaveChangesAsync();
+		}
 	}
 	private static bool IsGameValid(GameDTO game)
 	{

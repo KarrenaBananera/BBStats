@@ -3,10 +3,22 @@ using BBStats.Data;
 using BBStats.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies; // For cookie authentication
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
+// configure cookie authentication to be used in admin pages, the admin credentials are defined in appsettings.json
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Admin/Login";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(30); // cookie time to live, adjust as needed
+        options.SlidingExpiration = true;
+    });
+
 
 builder.Services.AddOutputCache();
 builder.Services.AddRazorPages(options =>
@@ -88,6 +100,7 @@ else
 app.UseStaticFiles();
 app.UseRouting();
 app.UseOutputCache();
+app.UseAuthentication(); // Enable authentication middleware to handle authentication for admin pages
 app.UseAuthorization();
 app.MapRazorPages();
 
