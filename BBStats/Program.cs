@@ -3,10 +3,32 @@ using BBStats.Data;
 using BBStats.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies; // For cookie authentication
 
 var builder = WebApplication.CreateBuilder(args);
 
+var adminUsername = builder.Configuration["AdminSettings:Username"];
+var adminPassword = builder.Configuration["AdminSettings:Password"];
+
+if (string.IsNullOrWhiteSpace(adminUsername) || string.IsNullOrWhiteSpace(adminPassword) ||
+    adminUsername == "enter a username here" || adminPassword == "enter a password here")
+{
+    throw new InvalidOperationException(
+        "AdminSettings:Username and AdminSettings:Password must be configured with non-default values and be not blank.");
+}
+
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
+// configure cookie authentication to be used in admin pages, the admin credentials are defined in appsettings.json
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Admin/Login";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(30); // cookie time to live, adjust as needed
+        options.SlidingExpiration = true;
+    });
+
 
 builder.Services.AddOutputCache();
 builder.Services.AddRazorPages(options =>
@@ -21,7 +43,7 @@ builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
 builder.Services.AddScoped<IPlayerProfileService, PlayerProfileService>();
 builder.Services.AddScoped<IPlayerCharacterStatsService, PlayerCharacterStatsService>();
 builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
-
+builder.Services.AddAuthorization(); // just adding it explicity
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -87,8 +109,10 @@ else
 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseOutputCache();
+app.UseAuthentication(); // Enable authentication middleware to handle authentication for admin pages
 app.UseAuthorization();
+
+app.UseOutputCache(); // safer ordering so admin pages are no cached
 app.MapRazorPages();
 
 app.Run();

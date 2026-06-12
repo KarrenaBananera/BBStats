@@ -1,0 +1,31 @@
+@page
+@model IgnoredPlayersModel
+<h2>Manage Ignored Players</h2>
+<div class="mainDiv container py-4">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Player ID</th>
+                    <th>Reason</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var player in Model.IgnoredPlayers)
+                {
+                    <tr>
+                        <td>@player.PlayerId</td>
+                        <td>@player.Reason</td>
+                        <td>@player.CreatedAt</td>
+                        <td>
+                            <form method="post" asp-page-handler="DeleteIgnoredPlayer" asp-route-id="@player.PlayerId" onsubmit="return confirm('Are you sure you want to remove this player from the ignored list?');">
+                                <button type="submit" class="btn btn-danger">Unignore</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>    
+    </div>
+</div>

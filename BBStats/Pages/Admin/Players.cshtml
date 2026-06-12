@@ -1,0 +1,30 @@
+@page
+@model PlayersModel
+<h2>Manage Players</h2>
+<div class="mainDiv container py-4">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Player ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var player in Model.Players)
+                {
+                    <tr>
+                        <td>@player.Id</td>
+                        <td>@player.Name</td>
+                        <td>
+                            <form method="post" asp-page-handler="IgnorePlayer" asp-route-id="@player.Id" onsubmit="return confirm('Are you sure you want to ignore this player?');">
+                                <button type="submit" class="btn btn-danger">Ignore</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
