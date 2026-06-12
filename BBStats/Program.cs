@@ -7,6 +7,16 @@ using Microsoft.AspNetCore.Authentication.Cookies; // For cookie authentication
 
 var builder = WebApplication.CreateBuilder(args);
 
+var adminUsername = builder.Configuration["AdminSettings:Username"];
+var adminPassword = builder.Configuration["AdminSettings:Password"];
+
+if (string.IsNullOrWhiteSpace(adminUsername) || string.IsNullOrWhiteSpace(adminPassword) ||
+    adminUsername == "enter a username here" || adminPassword == "enter a password here")
+{
+    throw new InvalidOperationException(
+        "AdminSettings:Username and AdminSettings:Password must be configured with non-default values and be not blank.");
+}
+
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
 // configure cookie authentication to be used in admin pages, the admin credentials are defined in appsettings.json
 builder.Services
