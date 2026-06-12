@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using BBStats.Data;
 using BBStats.Data.Entites;
 
-// Check if the user is an admin, if not redirect to login page
+
 [Authorize(Roles = "Admin")]
 public class PlayersModel : PageModel
 {
@@ -19,7 +19,7 @@ public class PlayersModel : PageModel
     }
 
     public async Task<IActionResult> OnGetAsync()
-    {   // Get all players from the database and display them on the page
+    {   
         Players = await _dbContext.Players.ToListAsync();
         return Page();
     }
@@ -27,13 +27,11 @@ public class PlayersModel : PageModel
     public async Task<IActionResult> OnPostIgnorePlayerAsync(Int64 id)
     {
 
-        // Add the player to the ignored players list, which will automatically exclude them from all public queries
-        var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == id);
+        var player = await _dbContext.Players
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (player == null) 
-        {
             return NotFound();
-        }
 
         if (!await _dbContext.IgnoredPlayers.AnyAsync(x => x.PlayerId == player.Id))
         {
