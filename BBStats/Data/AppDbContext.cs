@@ -90,9 +90,9 @@ public class AppDbContext : DbContext
 				.HasForeignKey(g => g.CharacterBId)
 				.OnDelete(DeleteBehavior.Restrict);
 		
-			entity.HasQueryFilter(g =>
-				!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerAId) &&
-				!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerBId));
+			//entity.HasQueryFilter(g =>
+			//	!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerAId) &&
+			//	!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerBId));
 		});
 
 		modelBuilder.Entity<Matchup>(entity =>
