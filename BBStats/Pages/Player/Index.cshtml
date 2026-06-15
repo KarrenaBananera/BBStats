@@ -10,6 +10,22 @@
         <partial name="Profile/_CharacterSidebar" model="Model.Profile" />
     </div>
 
+    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+    {
+        if (Model.Profile.IsIgnored)
+        {
+            <form method="post" asp-page-handler="DeleteIgnoredPlayer" asp-route-id="@Model.Profile.SteamId" onsubmit="return confirm('Are you sure you want to unignore this player?');">
+                <button type="submit" class="btn btn-success w-100">Unignore</button>
+            </form>
+        }
+        else
+        {
+        <form method="post" asp-page-handler="IgnorePlayer" asp-route-id="@Model.Profile.SteamId" onsubmit="return confirm('Are you sure you want to ignore this player?');">
+            <button type="submit" class="btn btn-danger w-100">Ignore</button>
+        </form>
+        }
+    }
+
     @if (Model.Profile.Characters.Any(c => c.IsActive && c.Games > 0))
     {
         <div class="row mt-3">

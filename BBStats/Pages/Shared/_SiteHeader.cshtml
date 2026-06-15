@@ -50,22 +50,23 @@
                 </div>
             </li>
 
-            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin")) // Only show the admin links if the user is authenticated and in the Admin role
+            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
             {
-                <li>
-                    <a asp-page="/Admin/Players">Admin Players</a>
-                </li>
-
                 <li>
                     <a asp-page="/Admin/IgnoredPlayers">Ignored Players</a>
                 </li>
-            }
-            else // Show the admin login link if the user is not authenticated or not an admin
-            {
                 <li>
-                    <a asp-page="/Admin/Login">Admin Login</a>
+                    <form method="post"
+                        asp-page="/Admin/Login"
+                        asp-page-handler="Logout"
+                        class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-light">
+                            Sign Out
+                        </button>
+                        </form>
                 </li>
             }
+
         </ul>
         <form class="col-12 col-sm-6 col-lg-auto mb-3 mb-lg-0" asp-page="/Search/Index" method="get" role="search">
             <input type="search"

@@ -47,8 +47,8 @@ public class LoginModel : PageModel
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 principal);
-
-            return RedirectToPage("/Admin/Players");
+            
+            return RedirectToPage("/Top/Index");
             }
         else
         {

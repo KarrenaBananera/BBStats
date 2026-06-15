@@ -35,6 +35,7 @@ public class PlayerSearchService : IPlayerSearchService
 
 	public async Task<IReadOnlyList<PlayerSearchResultItem>> SearchByNameAsync(
 		string query,
+		bool includeIgnored, 
 		CancellationToken cancellationToken = default)
 	{
 		var trimmedQuery = query.Trim();
@@ -42,13 +43,20 @@ public class PlayerSearchService : IPlayerSearchService
 		{
 			return [];
 		}
-
-		var players = await _dbContext.Players
-			.AsNoTracking()
-			.Where(player => EF.Functions.Like(player.Name, $"%{trimmedQuery}%"))
-			.OrderBy(player => player.Name)
-			.Take(MaxResults)
-			.ToListAsync(cancellationToken);
+		
+		var players = includeIgnored
+			? await _dbContext.Players.IgnoreQueryFilters()
+				.AsNoTracking()
+				.Where(player => EF.Functions.Like(player.Name, $"%{trimmedQuery}%"))
+				.OrderBy(player => player.Name)
+				.Take(MaxResults)
+				.ToListAsync(cancellationToken)
+			: await _dbContext.Players
+				.AsNoTracking()
+				.Where(player => EF.Functions.Like(player.Name, $"%{trimmedQuery}%"))
+				.OrderBy(player => player.Name)
+				.Take(MaxResults)
+				.ToListAsync(cancellationToken);
 
 		if (players.Count == 0)
 		{

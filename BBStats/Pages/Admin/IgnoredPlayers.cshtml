@@ -20,6 +20,7 @@
                         <td>@player.CreatedAt</td>
                         <td>
                             <form method="post" asp-page-handler="DeleteIgnoredPlayer" asp-route-id="@player.PlayerId" onsubmit="return confirm('Are you sure you want to remove this player from the ignored list?');">
+                                <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
                                 <button type="submit" class="btn btn-danger">Unignore</button>
                             </form>
                         </td>
@@ -27,5 +28,47 @@
                 }
             </tbody>
         </table>    
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pagination-container">
+
+                <span class="tableButton">
+                    @if (Model.PageNumber > 1)
+                    {
+                    <a class="tableButton"
+                    aria-label="Previous page"
+                    asp-page="/Admin/IgnoredPlayers"
+                    asp-route-pageNumber="@(Model.PageNumber - 1)">
+                    &lt;
+                    </a>
+                    } else {
+                        <span class="tableButton disabled">&lt;</span>
+                    }
+                </span>
+                
+
+                <span class="tableButton disabled">
+                    <span class="page-info mx-4">
+                        @Model.PageNumber
+                    </span>
+                </span>
+
+                
+                <span class="tableButton">
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                    <a class="tableButton"
+                    aria-label="Next page"
+                    asp-page="/Admin/IgnoredPlayers"
+                    asp-route-pageNumber="@(Model.PageNumber + 1)">
+                    &gt;
+                    </a>} 
+                    else {
+                        <span class="tableButton disabled">&gt;</span>
+                    }
+                </span>
+                
+            </div>
+        }
     </div>
 </div>

@@ -10,18 +10,36 @@ using BBStats.Data.Entites;
 public class IgnoredPlayersModel : PageModel
 {
     private readonly AppDbContext _dbContext;
+    private const int PageSize = 10;
 
     public List<IgnoredPlayer> IgnoredPlayers { get; set; } = [];
+    [BindProperty(SupportsGet = true)]
+    public int PageNumber { get; set; } = 1;
+
+    public int TotalPages { get; set; }
 
     public IgnoredPlayersModel(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<IActionResult> OnGetAsync()
-    {   
-        IgnoredPlayers = await _dbContext.IgnoredPlayers.ToListAsync();
-        return Page();
+    public async Task OnGetAsync()
+    {
+        if (PageNumber < 1)
+        {
+            PageNumber = 1;
+        }
+
+        var totalCount = await _dbContext.IgnoredPlayers.CountAsync();
+
+        TotalPages = (int)Math.Ceiling(totalCount / (double)PageSize);
+
+        IgnoredPlayers = await _dbContext.IgnoredPlayers
+            .OrderByDescending(x => x.CreatedAt)
+            .Skip((PageNumber - 1) * PageSize)
+            .Take(PageSize)
+            .ToListAsync();
+
     }
 
     public async Task<IActionResult> OnPostDeleteIgnoredPlayerAsync(Int64 id)
@@ -35,7 +53,7 @@ public class IgnoredPlayersModel : PageModel
 
         _dbContext.IgnoredPlayers.Remove(ignoredPlayer);
         await _dbContext.SaveChangesAsync();
-        return RedirectToPage();
+        return RedirectToPage(new { pageNumber = PageNumber });
     }
 
 }

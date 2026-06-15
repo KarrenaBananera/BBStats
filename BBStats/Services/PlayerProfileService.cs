@@ -25,27 +25,40 @@ public class PlayerProfileService : IPlayerProfileService
 		long playerId,
 		string characterSlug,
 		int pageNumber,
+		bool includeIgnored = false,
 		CancellationToken cancellationToken = default)
 	{
 		pageNumber = Math.Max(1, pageNumber);
 		var slug = characterSlug.Trim().ToLowerInvariant();
-
-		var player = await _dbContext.Players
-			.AsNoTracking()
-			.FirstOrDefaultAsync(p => p.Id == playerId, cancellationToken);
+		
+		var player = includeIgnored
+			? await _dbContext.Players.IgnoreQueryFilters()
+				.AsNoTracking()
+				.FirstOrDefaultAsync(p => p.Id == playerId, cancellationToken)
+			: await _dbContext.Players
+				.AsNoTracking()
+				.FirstOrDefaultAsync(p => p.Id == playerId, cancellationToken);
 
 		if (player is null)
 		{
 			return PlayerProfileResult.NotFound();
 		}
 
-		var characterStats = await _dbContext.PlayersCharactersStats
-			.AsNoTracking()
-			.Include(stat => stat.Character)
-			.Where(stat => stat.PlayerId == playerId)
-			.OrderByDescending(stat => stat.Wins + stat.Losses)
-			.ThenBy(stat => stat.Character.Name)
-			.ToListAsync(cancellationToken);
+		var characterStats = includeIgnored
+			? await _dbContext.PlayersCharactersStats.IgnoreQueryFilters()
+				.AsNoTracking()
+				.Include(stat => stat.Character)
+				.Where(stat => stat.PlayerId == playerId)
+				.OrderByDescending(stat => stat.Wins + stat.Losses)
+				.ThenBy(stat => stat.Character.Name)
+				.ToListAsync(cancellationToken)
+			: await _dbContext.PlayersCharactersStats
+				.AsNoTracking()
+				.Include(stat => stat.Character)
+				.Where(stat => stat.PlayerId == playerId)
+				.OrderByDescending(stat => stat.Wins + stat.Losses)
+				.ThenBy(stat => stat.Character.Name)
+				.ToListAsync(cancellationToken);
 
 		if (characterStats.Count == 0)
 		{
