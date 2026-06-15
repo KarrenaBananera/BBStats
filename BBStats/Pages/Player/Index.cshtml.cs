@@ -17,6 +17,11 @@ public class IndexModel : PageModel
 
 	public async Task<IActionResult> OnPostDeleteIgnoredPlayerAsync(Int64 id)
 {
+	if (User.Identity?.IsAuthenticated != true || !User.IsInRole("Admin"))
+	{
+		return Forbid();
+	}
+
     var ignoredPlayer = await _dbContext.IgnoredPlayers
         .FirstOrDefaultAsync(x => x.PlayerId == id);
 
@@ -37,6 +42,11 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostIgnorePlayerAsync(Int64 id)
     {
+
+		if (User.Identity?.IsAuthenticated != true || !User.IsInRole("Admin"))
+		{
+			return Forbid();
+		}
 
         var player = await _dbContext.Players
             .FirstOrDefaultAsync(x => x.Id == id);
