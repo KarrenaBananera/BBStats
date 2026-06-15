@@ -7,6 +7,7 @@
             <thead>
                 <tr>
                     <th>Player ID</th>
+                    <th>Player Name</th>
                     <th>Reason</th>
                     <th>Created At</th>
                 </tr>
@@ -16,6 +17,7 @@
                 {
                     <tr>
                         <td>@player.PlayerId</td>
+                        <td>@Model.PlayerNames.GetValueOrDefault(player.PlayerId, "Unknown")</td>
                         <td>@player.Reason</td>
                         <td>@player.CreatedAt</td>
                         <td>

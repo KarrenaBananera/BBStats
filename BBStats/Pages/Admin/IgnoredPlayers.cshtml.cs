@@ -11,7 +11,7 @@ public class IgnoredPlayersModel : PageModel
 {
     private readonly AppDbContext _dbContext;
     private const int PageSize = 10;
-
+    public Dictionary<long, string> PlayerNames { get; set; } = [];
     public List<IgnoredPlayer> IgnoredPlayers { get; set; } = [];
     [BindProperty(SupportsGet = true)]
     public int PageNumber { get; set; } = 1;
@@ -39,6 +39,13 @@ public class IgnoredPlayersModel : PageModel
             .Skip((PageNumber - 1) * PageSize)
             .Take(PageSize)
             .ToListAsync();
+
+        var playerIds = IgnoredPlayers.Select(x => x.PlayerId).ToList();
+
+        PlayerNames = await _dbContext.Players
+            .IgnoreQueryFilters()
+            .Where(x => playerIds.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, x => x.Name);
 
     }
 
