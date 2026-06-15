@@ -18,14 +18,14 @@ if (string.IsNullOrWhiteSpace(adminUsername) || string.IsNullOrWhiteSpace(adminP
 }
 
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
-// configure cookie authentication to be used in admin pages, the admin credentials are defined in appsettings.json
+
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Admin/Login";
         options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromDays(30); // cookie time to live, adjust as needed
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
         options.SlidingExpiration = true;
     });
 
@@ -109,10 +109,10 @@ else
 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthentication(); // Enable authentication middleware to handle authentication for admin pages
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseOutputCache(); // safer ordering so admin pages are no cached
+app.UseOutputCache();
 app.MapRazorPages();
 
 app.Run();

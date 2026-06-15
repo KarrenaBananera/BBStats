@@ -17,13 +17,12 @@ public class GameRepository : IGamesRepository
 
 	public async Task<bool> AddGameAsync(GameDTO game)
 	{
-		// Do not import games involving ignored players.
+
 		var isIgnored = await _dbContext.IgnoredPlayers.AnyAsync(x =>
 			x.PlayerId == game.PlayerAId || x.PlayerId == game.PlayerBId);
 
 		if (isIgnored)
-		{	// idk if return false permanently flags the game as invalid or if it just skips the current processing
-			// change this to raise an exception if true, to log ignored games?
+		{
 			return false;
 		}
 
