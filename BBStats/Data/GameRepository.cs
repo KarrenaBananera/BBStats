@@ -18,14 +18,6 @@ public class GameRepository : IGamesRepository
 	public async Task<bool> AddGameAsync(GameDTO game)
 	{
 
-		var isIgnored = await _dbContext.IgnoredPlayers.AnyAsync(x =>
-			x.PlayerId == game.PlayerAId || x.PlayerId == game.PlayerBId);
-
-		if (isIgnored)
-		{
-			return false;
-		}
-
 		if (!IsGameValid(game))
 			return false;
 			
