@@ -93,7 +93,7 @@ public class IndexModel : PageModel
 
 		var page = MatchPage is null or < 1 ? 1 : MatchPage.Value;
 
-		var includeIgnored = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+		var includeIgnored = true;
 
 		var result = await _playerProfileService.GetProfileAsync(
 			playerId,

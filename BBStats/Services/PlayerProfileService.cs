@@ -30,6 +30,10 @@ public class PlayerProfileService : IPlayerProfileService
 	{
 		pageNumber = Math.Max(1, pageNumber);
 		var slug = characterSlug.Trim().ToLowerInvariant();
+
+		var isIgnored = await _dbContext.IgnoredPlayers
+			.AnyAsync(x => x.PlayerId == playerId, cancellationToken);
+
 		
 		var player = includeIgnored
 			? await _dbContext.Players.IgnoreQueryFilters()
@@ -112,10 +116,10 @@ public class PlayerProfileService : IPlayerProfileService
 			SteamId = playerId.ToString(),
 			CharacterSlug = slug,
 			CharacterDisplayName = activeStat.Character.Name,
-			OverallRank = overallRank,
-			CharacterRank = characterRank,
-			Rating = (int)Math.Round(activeStat.PlayerRating.CurrentRating),
-			RatingDeviation = (int)Math.Round(activeStat.PlayerRating.RatingDeviation),
+			OverallRank = isIgnored ? 0 :overallRank,
+			CharacterRank = isIgnored ? 0 :characterRank,
+			Rating = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.CurrentRating),
+			RatingDeviation = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.RatingDeviation),
 			Characters = sidebar,
 			Series = pageSets,
 			CurrentPage = pageNumber,
@@ -129,7 +133,11 @@ public class PlayerProfileService : IPlayerProfileService
 		int characterId,
 		CancellationToken cancellationToken)
 	{
+		var isIgnored = await _dbContext.IgnoredPlayers
+			.AnyAsync(x => x.PlayerId == playerId, cancellationToken);
+
 		var playerGames = await _dbContext.PlayersGames
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.Include(pg => pg.Game)
 			.Where(pg => pg.PlayerId == playerId && pg.CharacterId == characterId)
@@ -149,7 +157,7 @@ public class PlayerProfileService : IPlayerProfileService
 
 		var groupedSets = GroupIntoSets(contexts);
 		return groupedSets
-			.Select(BuildSeriesViewModel)
+			.Select(set => BuildSeriesViewModel(set, isIgnored))
 			.OrderByDescending(data => data.SortKey)
 			.Select(data => data.Series)
 			.ToList();
@@ -221,13 +229,13 @@ public class PlayerProfileService : IPlayerProfileService
 		return sets;
 	}
 
-	private SeriesViewModelData BuildSeriesViewModel(List<PlayerGameContext> setGames)
+	private SeriesViewModelData BuildSeriesViewModel(List<PlayerGameContext> setGames, bool isIgnored)
 	{
 		var firstGame = setGames[0];
 		var wins = setGames.Count(g => g.Won);
 		var losses = setGames.Count - wins;
 		var totalRatingDelta = setGames.Sum(g => g.RatingDelta);
-		var (ratingDeltaText, ratingDeltaCss) = FormatRatingDelta(totalRatingDelta);
+		var (ratingDeltaText, ratingDeltaCss) = FormatRatingDelta(totalRatingDelta, isIgnored);
 		var scoreCss = wins > losses
 			? "text-success"
 			: wins < losses
@@ -235,7 +243,7 @@ public class PlayerProfileService : IPlayerProfileService
 				: "text-warning";
 
 		var gameRows = setGames
-			.Select((game, index) => MapGameRow(game, index + 1))
+			.Select((game, index) => MapGameRow(game, index + 1, isIgnored))
 			.ToList();
 
 		var downloadUrls = gameRows
@@ -260,10 +268,10 @@ public class PlayerProfileService : IPlayerProfileService
 				downloadUrls));
 	}
 
-	private GameResultRow MapGameRow(PlayerGameContext game, int number)
+	private GameResultRow MapGameRow(PlayerGameContext game, int number, bool isIgnored)
 	{
 		var (openUrl, downloadUrl) = GameReplayLink.Build(game.Game.ReplayId, _urlForFront);
-		var (ratingDeltaText, ratingDeltaCss) = FormatRatingDelta(game.RatingDelta);
+		var (ratingDeltaText, ratingDeltaCss) = FormatRatingDelta(game.RatingDelta, isIgnored);
 
 		return new GameResultRow(
 			number,
@@ -311,8 +319,13 @@ public class PlayerProfileService : IPlayerProfileService
 		return higherRanked + 1;
 	}
 
-	private static (string Text, string Css) FormatRatingDelta(double delta)
+	private static (string Text, string Css) FormatRatingDelta(double delta, bool hideRating)
 	{
+		if (hideRating)
+		{
+			return ("", "");
+		}
+
 		var rounded = (int)Math.Round(delta, MidpointRounding.AwayFromZero);
 		if (rounded > 0)
 		{

@@ -52,7 +52,7 @@ public class IndexModel : PageModel
 			});
 		}
 
-		var includeIgnored = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+		var includeIgnored = true;
 
 		var results = await _playerSearchService.SearchByNameAsync(query, includeIgnored, cancellationToken);
 		Search = new PlayerSearchPageViewModel

@@ -20,7 +20,12 @@ public class TopPlayersService : ITopPlayersService
 	{
 		pageNumber = Math.Max(1, pageNumber);
 
+		var ignoredPlayerIds = await _dbContext.IgnoredPlayers
+			.Select(x => x.PlayerId)
+			.ToHashSetAsync(cancellationToken);
+
 		var query = _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.Include(stat => stat.Player)
 			.Include(stat => stat.Character)
@@ -32,7 +37,8 @@ public class TopPlayersService : ITopPlayersService
 		}
 
 		query = query
-			.OrderByDescending(stat => stat.PlayerRating.CurrentRating)
+			.OrderBy(stat => ignoredPlayerIds.Contains(stat.PlayerId))
+			.ThenByDescending(stat => stat.PlayerRating.CurrentRating)
 			.ThenBy(stat => stat.PlayerId)
 			.ThenBy(stat => stat.CharacterId);
 
@@ -59,7 +65,7 @@ public class TopPlayersService : ITopPlayersService
 				stat.PlayerId.ToString(),
 				stat.Character.Name,
 				stat.Character.Name.ToLowerInvariant(),
-				(int)Math.Round(stat.PlayerRating.CurrentRating)))
+				ignoredPlayerIds.Contains(stat.PlayerId) ? 0 : (int)Math.Round(stat.PlayerRating.CurrentRating)))
 			.ToList();
 
 		return new TopPageViewModel

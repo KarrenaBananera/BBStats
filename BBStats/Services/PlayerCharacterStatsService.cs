@@ -27,6 +27,7 @@ public class PlayerCharacterStatsService : IPlayerCharacterStatsService
 		}
 
 		var hasCharacter = await _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.AnyAsync(stat => stat.PlayerId == playerId && stat.CharacterId == characterId, cancellationToken);
 
@@ -36,6 +37,7 @@ public class PlayerCharacterStatsService : IPlayerCharacterStatsService
 		}
 
 		var gameRows = await _dbContext.PlayersGames
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.Include(pg => pg.Game)
 			.Where(pg => pg.PlayerId == playerId && pg.CharacterId == characterId)

@@ -15,13 +15,14 @@ public class PlayerSearchService : IPlayerSearchService
 	}
 
 	public Task<bool> PlayerExistsAsync(long steamId, CancellationToken cancellationToken = default) =>
-		_dbContext.Players.AsNoTracking().AnyAsync(p => p.Id == steamId, cancellationToken);
+		_dbContext.Players.IgnoreQueryFilters().AsNoTracking().AnyAsync(p => p.Id == steamId, cancellationToken);
 
 	public async Task<string> GetDefaultCharacterSlugAsync(
 		long steamId,
 		CancellationToken cancellationToken = default)
 	{
 		var topCharacter = await _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.Include(stat => stat.Character)
 			.Where(stat => stat.PlayerId == steamId)
