@@ -42,7 +42,7 @@ public class GameRepository : IGamesRepository
 
 	private async Task<Player> UpdateOrCreatePlayerAsync(Int64 userId, string playerName)
 	{
-		var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == userId);
+		var player = await _dbContext.Players.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == userId);
 
 		if (player == null)
 		{
@@ -61,8 +61,9 @@ public class GameRepository : IGamesRepository
 	}
 	private async Task<PlayerCharacterStat> GetOrCreatePlayerCharacterStat(Int64 playerId, int characterId)
 	{
-		var playerCharacterStat = await _dbContext.PlayersCharactersStats.
-			FirstOrDefaultAsync(x => x.PlayerId == playerId && x.CharacterId == characterId);
+		var playerCharacterStat = await _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
+			.FirstOrDefaultAsync(x => x.PlayerId == playerId && x.CharacterId == characterId);
 
 		if (playerCharacterStat == null)
 		{
