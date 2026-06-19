@@ -20,6 +20,9 @@ public class GameRepository : IGamesRepository
 
 		if (!IsGameValid(game))
 			return false;
+
+		if (await _dbContext.Games.AnyAsync(g => g.ReplayId == game.ReplayId))
+			return false;
 			
 		await _dbContext.Database.BeginTransactionAsync();
 

@@ -7,24 +7,24 @@
         ? PlayerPageUrl.For(Url, Model.SteamId, Model.CharacterSlug, Model.CurrentPage + 1)
         : null;
 }
-<div class="profile-pagination @(ViewData["PaginationClass"] as string)" role="navigation" aria-label="Match list pagination">
+<div class="pagination-container @(ViewData["PaginationClass"] as string)" role="navigation" aria-label="Match list pagination">
     @if (prevUrl is not null)
     {
-        <a href="@prevUrl" class="profile-pagination__btn">← Previous</a>
+        <a href="@prevUrl" class="tableButton" aria-label="Previous page">&lt;</a>
     }
     else
     {
-        <span class="profile-pagination__btn is-disabled" aria-disabled="true">← Previous</span>
+        <span class="tableButton is-disabled" aria-disabled="true">&lt;</span>
     }
 
-    <span class="page-indicator">Page @Model.CurrentPage</span>
+    <span class="page-info mx-4">@Model.CurrentPage</span>
 
     @if (nextUrl is not null)
     {
-        <a href="@nextUrl" class="profile-pagination__btn">Next →</a>
+        <a href="@nextUrl" class="tableButton" aria-label="Next page">&gt;</a>
     }
     else
     {
-        <span class="profile-pagination__btn is-disabled" aria-disabled="true">Next →</span>
+        <span class="tableButton is-disabled" aria-disabled="true">&gt;</span>
     }
 </div>

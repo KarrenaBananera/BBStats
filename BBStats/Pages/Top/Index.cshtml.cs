@@ -16,28 +16,27 @@ public class IndexModel : PageModel
 		_topPlayersService = topPlayersService;
 	}
 
-	[BindProperty(SupportsGet = true, Name = "page")]
-	public int PageNumber { get; set; } = 1;
-
 	public TopPageViewModel Top { get; private set; } = new();
 
 	public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
 	{
-		if (PageNumber < 1)
+		var pageNumber = PaginationQuery.ReadPageNumber(Request);
+
+		if (pageNumber < 1)
 		{
-			return RedirectToPage(new { page = 1 });
+			return Redirect(PageQueryUrl.WithQueryPage(Url, "/Top/Index", 1)!);
 		}
 
-		Top = await _topPlayersService.GetPageAsync(PageNumber, cancellationToken: cancellationToken);
+		Top = await _topPlayersService.GetPageAsync(pageNumber, cancellationToken: cancellationToken);
 
-		if (PageNumber > Top.TotalPages && Top.TotalPages > 0)
+		if (pageNumber > Top.TotalPages && Top.TotalPages > 0)
 		{
-			return RedirectToPage(new { page = Top.TotalPages });
+			return Redirect(PageQueryUrl.WithQueryPage(Url, "/Top/Index", Top.TotalPages)!);
 		}
 
 		return Page();
 	}
 
 	public string? GetPageUrl(int page) =>
-		page <= 1 ? Url.Page("/Top/Index") : Url.Page("/Top/Index", new { page });
+		PageQueryUrl.WithQueryPage(Url, "/Top/Index", page);
 }

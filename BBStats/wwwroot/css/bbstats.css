@@ -6,6 +6,10 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   font-family: system-ui, "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   color: white;
@@ -13,6 +17,15 @@ body {
   line-height: 1.5;
   padding: 0px;
   margin: 0px;
+  min-height: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1 0 auto;
+  width: 100%;
 }
 
 h1 {
@@ -151,6 +164,8 @@ footer {
   background-color: #212529;
   border-top: 2px solid #495057;
   width: 100%;
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .mainDiv {
@@ -172,6 +187,18 @@ footer {
   border: solid 1px #495057;
   border-radius: 10px;
   padding: 1.5rem;
+}
+
+.about-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.about-page p {
+  color: #ced4da;
+  line-height: 1.6;
+  margin-bottom: 1rem;
 }
 
 .character-banner {
@@ -513,32 +540,41 @@ table {
   overflow: hidden;
 }
 
+.table-scroll,
+.profile-characters-panel {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #495057 #111214;
+}
+
 .table-scroll {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: #495057 #111214;
   padding-bottom: 0.25rem;
 }
 
-.table-scroll::-webkit-scrollbar {
+.table-scroll::-webkit-scrollbar,
+.profile-characters-panel::-webkit-scrollbar {
+  width: 8px;
   height: 8px;
 }
 
-.table-scroll::-webkit-scrollbar-track {
+.table-scroll::-webkit-scrollbar-track,
+.profile-characters-panel::-webkit-scrollbar-track {
   background: #111214;
   border-radius: 999px;
 }
 
-.table-scroll::-webkit-scrollbar-thumb {
+.table-scroll::-webkit-scrollbar-thumb,
+.profile-characters-panel::-webkit-scrollbar-thumb {
   background-color: #495057;
   border-radius: 999px;
   border: 2px solid #111214;
 }
 
-.table-scroll::-webkit-scrollbar-thumb:hover {
+.table-scroll::-webkit-scrollbar-thumb:hover,
+.profile-characters-panel::-webkit-scrollbar-thumb:hover {
   background-color: #6c757d;
 }
 
@@ -765,12 +801,30 @@ tbody tr:last-child td:last-child {
   font-size: 0.95rem;
 }
 
+.profile-record {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.profile-record-sep {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+@media (min-width: 768px) {
+  .profile-rankings .profile-record {
+    flex-basis: 100%;
+  }
+}
+
 .profile-characters-panel {
   display: flex;
   flex-direction: column;
   gap: 0;
   max-height: 280px;
   overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .profile-char-link {
@@ -820,6 +874,16 @@ tbody tr:last-child td:last-child {
   text-align: right;
   font-size: 0.85rem;
   white-space: nowrap;
+}
+
+.profile-char-elo {
+  font-weight: 600;
+  color: white;
+}
+
+.profile-char-elo-deviation {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .profile-stats-section {
@@ -1040,6 +1104,12 @@ tbody tr:last-child td:last-child {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .series-game-links {
+    display: none;
+  }
 }
 
 .series-replay-open {

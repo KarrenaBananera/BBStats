@@ -19,6 +19,13 @@
                 @Model.Rating
                 <span class="profile-rating-deviation">± @Model.RatingDeviation</span>
             </span>
+            <span class="profile-record">
+                <span class="text-success">@Model.Wins W</span>
+                <span class="profile-record-sep" aria-hidden="true">·</span>
+                <span class="text-danger">@Model.Losses L</span>
+                <span class="profile-record-sep" aria-hidden="true">·</span>
+                <span class="@Model.WinrateCss">Wr @Model.WinratePercent.ToString("0.#")%</span>
+            </span>
         </div>
     </div>
 </div>

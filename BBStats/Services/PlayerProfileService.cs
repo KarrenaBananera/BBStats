@@ -104,11 +104,13 @@ public class PlayerProfileService : IPlayerProfileService
 				stat.Character.Name,
 				stat.Wins + stat.Losses,
 				(int)Math.Round(stat.PlayerRating.CurrentRating),
+				(int)Math.Round(stat.PlayerRating.RatingDeviation),
 				stat.CharacterId == characterId))
 			.ToList();
 
 		var characterRank = await GetCharacterRankAsync(characterId, activeStat, cancellationToken);
 		var overallRank = await GetOverallRankAsync(activeStat, cancellationToken);
+		var (winratePercent, winrateCss) = FormatWinrate(activeStat.Wins, activeStat.Losses);
 
 		return PlayerProfileResult.Found(new PlayerProfilePageViewModel
 		{
@@ -120,6 +122,10 @@ public class PlayerProfileService : IPlayerProfileService
 			CharacterRank = isIgnored ? 0 :characterRank,
 			Rating = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.CurrentRating),
 			RatingDeviation = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.RatingDeviation),
+			Wins = activeStat.Wins,
+			Losses = activeStat.Losses,
+			WinratePercent = winratePercent,
+			WinrateCss = winrateCss,
 			Characters = sidebar,
 			Series = pageSets,
 			CurrentPage = pageNumber,
@@ -318,6 +324,25 @@ public class PlayerProfileService : IPlayerProfileService
 
 		return higherRanked + 1;
 	}
+
+	private static (double WinratePercent, string WinrateCss) FormatWinrate(int wins, int losses)
+	{
+		var total = wins + losses;
+		if (total == 0)
+		{
+			return (0, "text-muted");
+		}
+
+		var winrate = (double)wins / total * 100;
+		return (winrate, GetWinrateCss(winrate));
+	}
+
+	private static string GetWinrateCss(double winrate) => winrate switch
+	{
+		< 45 => "text-danger",
+		> 55 => "text-success",
+		_ => "text-warning"
+	};
 
 	private static (string Text, string Css) FormatRatingDelta(double delta, bool hideRating)
 	{
