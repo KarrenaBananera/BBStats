@@ -17,6 +17,7 @@ public class GameRepository : IGamesRepository
 
 	public async Task<bool> AddGameAsync(GameDTO game)
 	{
+
 		if (!IsGameValid(game))
 			return false;
 
@@ -44,7 +45,7 @@ public class GameRepository : IGamesRepository
 
 	private async Task<Player> UpdateOrCreatePlayerAsync(Int64 userId, string playerName)
 	{
-		var player = await _dbContext.Players.FirstOrDefaultAsync(x => x.Id == userId);
+		var player = await _dbContext.Players.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == userId);
 
 		if (player == null)
 		{
@@ -63,8 +64,9 @@ public class GameRepository : IGamesRepository
 	}
 	private async Task<PlayerCharacterStat> GetOrCreatePlayerCharacterStat(Int64 playerId, int characterId)
 	{
-		var playerCharacterStat = await _dbContext.PlayersCharactersStats.
-			FirstOrDefaultAsync(x => x.PlayerId == playerId && x.CharacterId == characterId);
+		var playerCharacterStat = await _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
+			.FirstOrDefaultAsync(x => x.PlayerId == playerId && x.CharacterId == characterId);
 
 		if (playerCharacterStat == null)
 		{
@@ -112,6 +114,7 @@ public class GameRepository : IGamesRepository
 		else
 			matchupDb.WinsB++;
 	}
+	
 	private static bool IsGameValid(GameDTO game)
 	{
 		if (game.PlayerAId < MIN_STEAM_ID || game.PlayerAId > MAX_STEAM_ID)

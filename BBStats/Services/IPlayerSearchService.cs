@@ -10,5 +10,6 @@ public interface IPlayerSearchService
 
 	Task<IReadOnlyList<PlayerSearchResultItem>> SearchByNameAsync(
 		string query,
+		bool includeIgnored, 
 		CancellationToken cancellationToken = default);
 }

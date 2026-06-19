@@ -8,6 +8,7 @@ public interface IPlayerProfileService
 		long playerId,
 		string characterSlug,
 		int pageNumber,
+		bool includeIgnored,
 		CancellationToken cancellationToken = default);
 }
 

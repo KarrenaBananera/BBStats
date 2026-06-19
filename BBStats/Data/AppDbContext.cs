@@ -15,16 +15,32 @@ public class AppDbContext : DbContext
 	public DbSet<Matchup> Matchups => Set<Matchup>();
 	public DbSet<Player> Players => Set<Player>();
 	public DbSet<PlayerCharacterStat> PlayersCharactersStats => Set<PlayerCharacterStat>();
+	public DbSet<IgnoredPlayer> IgnoredPlayers => Set<IgnoredPlayer>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.Entity<IgnoredPlayer>(entity =>
+		{
+			entity.HasKey(ip => ip.PlayerId);
+    		entity.Property(ip => ip.PlayerId)
+          		.ValueGeneratedNever();
+
+			entity.Property(ip => ip.Reason)
+				.HasMaxLength(250);
+
+			entity.Property(ip => ip.CreatedAt)
+				.HasDefaultValueSql("GETUTCDATE()");
+		});
 
 		modelBuilder.Entity<Character>().HasData(CharactersSeed.All);
 
 		modelBuilder.Entity<Player>(entity =>
 		{
 			entity.Property(p => p.Id).ValueGeneratedNever();
+			entity.HasQueryFilter(p =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == p.Id));
 		});
 
 		modelBuilder.Entity<PlayerCharacterStat>(entity =>
@@ -48,6 +64,9 @@ public class AppDbContext : DbContext
 			//	  .HasPrincipalKey(ps => new { ps.PlayerId, ps.CharacterId });
 
 			entity.OwnsOne(x => x.PlayerRating);
+
+			entity.HasQueryFilter(u =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == u.PlayerId));
 		});
 
 		modelBuilder.Entity<Game>(entity =>
@@ -73,6 +92,10 @@ public class AppDbContext : DbContext
 				.WithMany()
 				.HasForeignKey(g => g.CharacterBId)
 				.OnDelete(DeleteBehavior.Restrict);
+		
+			//entity.HasQueryFilter(g =>
+			//	!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerAId) &&
+			//	!IgnoredPlayers.Any(ip => ip.PlayerId == g.PlayerBId));
 		});
 
 		modelBuilder.Entity<Matchup>(entity =>
@@ -114,6 +137,10 @@ public class AppDbContext : DbContext
 				  .HasForeignKey(pg => new { pg.PlayerId, pg.CharacterId })
 				  .OnDelete(DeleteBehavior.Restrict);
 
+			entity.HasQueryFilter(pg =>
+				!IgnoredPlayers.Any(ip => ip.PlayerId == pg.PlayerId) &&
+				!IgnoredPlayers.Any(ip => ip.PlayerId == pg.Game.PlayerAId) &&
+				!IgnoredPlayers.Any(ip => ip.PlayerId == pg.Game.PlayerBId));
 		});
 	}
 

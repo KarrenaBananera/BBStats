@@ -15,13 +15,14 @@ public class PlayerSearchService : IPlayerSearchService
 	}
 
 	public Task<bool> PlayerExistsAsync(long steamId, CancellationToken cancellationToken = default) =>
-		_dbContext.Players.AsNoTracking().AnyAsync(p => p.Id == steamId, cancellationToken);
+		_dbContext.Players.IgnoreQueryFilters().AsNoTracking().AnyAsync(p => p.Id == steamId, cancellationToken);
 
 	public async Task<string> GetDefaultCharacterSlugAsync(
 		long steamId,
 		CancellationToken cancellationToken = default)
 	{
 		var topCharacter = await _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.Include(stat => stat.Character)
 			.Where(stat => stat.PlayerId == steamId)
@@ -35,6 +36,7 @@ public class PlayerSearchService : IPlayerSearchService
 
 	public async Task<IReadOnlyList<PlayerSearchResultItem>> SearchByNameAsync(
 		string query,
+		bool includeIgnored, 
 		CancellationToken cancellationToken = default)
 	{
 		var trimmedQuery = query.Trim();
@@ -42,13 +44,20 @@ public class PlayerSearchService : IPlayerSearchService
 		{
 			return [];
 		}
-
-		var players = await _dbContext.Players
-			.AsNoTracking()
-			.Where(player => EF.Functions.Like(player.Name, $"%{trimmedQuery}%"))
-			.OrderBy(player => player.Name)
-			.Take(MaxResults)
-			.ToListAsync(cancellationToken);
+		
+		var players = includeIgnored
+			? await _dbContext.Players.IgnoreQueryFilters()
+				.AsNoTracking()
+				.Where(player => EF.Functions.Like(player.Name, $"%{trimmedQuery}%"))
+				.OrderBy(player => player.Name)
+				.Take(MaxResults)
+				.ToListAsync(cancellationToken)
+			: await _dbContext.Players
+				.AsNoTracking()
+				.Where(player => EF.Functions.Like(player.Name, $"%{trimmedQuery}%"))
+				.OrderBy(player => player.Name)
+				.Take(MaxResults)
+				.ToListAsync(cancellationToken);
 
 		if (players.Count == 0)
 		{

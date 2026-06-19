@@ -3,10 +3,32 @@ using BBStats.Data;
 using BBStats.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies; // For cookie authentication
 
 var builder = WebApplication.CreateBuilder(args);
 
+var adminUsername = builder.Configuration["AdminSettings:Username"];
+var adminPassword = builder.Configuration["AdminSettings:Password"];
+
+if (string.IsNullOrWhiteSpace(adminUsername) || string.IsNullOrWhiteSpace(adminPassword) ||
+    adminUsername == "enter a username here" || adminPassword == "enter a password here")
+{
+    throw new InvalidOperationException(
+        "AdminSettings:Username and AdminSettings:Password must be configured with non-default values and be not blank.");
+}
+
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
+
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Admin/Login";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
+        options.SlidingExpiration = true;
+    });
+
 
 builder.Services.AddOutputCache();
 builder.Services.AddRazorPages(options =>
@@ -23,7 +45,7 @@ builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
 builder.Services.AddScoped<IPlayerProfileService, PlayerProfileService>();
 builder.Services.AddScoped<IPlayerCharacterStatsService, PlayerCharacterStatsService>();
 builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
-
+builder.Services.AddAuthorization(); // just adding it explicity
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -92,8 +114,10 @@ app.UseStaticFiles(new StaticFileOptions
     OnPrepareResponse = StaticFileCacheHeaders.ApplyLongTermImageCache
 });
 app.UseRouting();
-app.UseOutputCache();
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseOutputCache();
 app.MapRazorPages();
 
 app.Run();

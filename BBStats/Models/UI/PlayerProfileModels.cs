@@ -72,4 +72,5 @@ public class PlayerProfilePageViewModel
     public int TotalPages { get; init; } = 1;
     public bool HasMatches => Series.Count > 0;
     public string? EmptyMessage { get; init; }
+    public bool IsIgnored { get; set; }
 }
