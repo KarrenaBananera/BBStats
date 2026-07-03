@@ -2,7 +2,7 @@ using System.Globalization;
 using BBStats.Data;
 using Newtonsoft.Json.Linq;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class GamesParser
 {
@@ -12,7 +12,23 @@ public class GamesParser
 
 		var root = JObject.Parse(data);
 
-		var tableChildren = root["response"]?["query-results"]?["children"]?["props"]?["children"] as JArray;
+		JArray tableChildren = null;
+
+		var childrenArray = root["response"]?["query-results"]?["children"] as JArray;
+		if (childrenArray != null)
+		{
+			var tableElement = childrenArray.FirstOrDefault(c => c["type"]?.ToString() == "Table");
+			if (tableElement != null)
+			{
+				tableChildren = tableElement["props"]?["children"] as JArray;
+			}
+		}
+		
+		if (tableChildren == null)
+		{
+			tableChildren = root["response"]?["query-results"]?["children"]?["props"]?["children"] as JArray;
+		}
+
 		if (tableChildren == null || tableChildren.Count < 2)
 			return result;
 

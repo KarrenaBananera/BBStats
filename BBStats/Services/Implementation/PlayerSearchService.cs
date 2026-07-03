@@ -1,8 +1,9 @@
 using BBStats.Data;
 using BBStats.Models.UI;
+using BBStats.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class PlayerSearchService : IPlayerSearchService
 {

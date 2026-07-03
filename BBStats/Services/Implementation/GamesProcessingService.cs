@@ -1,8 +1,9 @@
-﻿using BBStats.Configuration;
+using BBStats.Configuration;
 using BBStats.Data;
+using BBStats.Services.Interfaces;
 using Microsoft.Extensions.Options;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class GamesProcessingService : BackgroundService
 {
@@ -39,8 +40,8 @@ public class GamesProcessingService : BackgroundService
 			try
 			{
 				using var scope = _scopeFactory.CreateScope();
-				var client = scope.ServiceProvider.GetRequiredService<GamesFetcherClient>();
-				var parser = scope.ServiceProvider.GetRequiredService<IGamesParser>();
+				var client = scope.ServiceProvider.GetRequiredService<BBStats.Services.Implementation.GamesFetcherClient>();
+				var parser = scope.ServiceProvider.GetRequiredService<BBStats.Services.Interfaces.IGamesParser>();
 				var repositroy = scope.ServiceProvider.GetRequiredService<IGamesRepository>();
 
 				var unparsedGames = await client.GetGames();

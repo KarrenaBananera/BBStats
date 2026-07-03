@@ -1,5 +1,5 @@
 using BBStats.Data.Entites;
-using BBStats.Services;
+using BBStats.Services.Implementation;
 using Microsoft.EntityFrameworkCore;
 
 namespace BBStats.Data;

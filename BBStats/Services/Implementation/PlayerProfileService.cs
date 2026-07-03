@@ -2,10 +2,11 @@ using BBStats.Configuration;
 using BBStats.Data;
 using BBStats.Data.Entites;
 using BBStats.Models.UI;
+using BBStats.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class PlayerProfileService : IPlayerProfileService
 {
@@ -276,7 +277,7 @@ public class PlayerProfileService : IPlayerProfileService
 
 	private GameResultRow MapGameRow(PlayerGameContext game, int number, bool isIgnored)
 	{
-		var (openUrl, downloadUrl) = GameReplayLink.Build(game.Game.ReplayId, _urlForFront);
+		var (openUrl, downloadUrl) = BBStats.Services.Implementation.GameReplayLink.Build(game.Game.ReplayId, _urlForFront);
 		var (ratingDeltaText, ratingDeltaCss) = FormatRatingDelta(game.RatingDelta, isIgnored);
 
 		return new GameResultRow(

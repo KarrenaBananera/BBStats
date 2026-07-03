@@ -1,11 +1,11 @@
 using BBStats.Models.UI;
-using BBStats.Services;
 using BBStats.Data;
 using BBStats.Data.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.OutputCaching;
+using BBStats.Services.Interfaces;
 
 namespace BBStats.Pages.Player;
 

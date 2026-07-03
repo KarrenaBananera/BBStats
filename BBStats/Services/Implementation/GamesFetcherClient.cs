@@ -2,7 +2,7 @@ using System.Text;
 using BBStats.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class GamesFetcherClient
 {
@@ -13,7 +13,7 @@ public class GamesFetcherClient
 
 	public GamesFetcherClient(HttpClient httpClient, IOptionsMonitor<GamesFetcherOptions> options)
 	{
-		_requestString = File.ReadAllText("Services/RequestString.txt");
+		_requestString = File.ReadAllText("Implementation/RequestString.txt");
 		_httpClient = httpClient;
 		_options = options;
 		_postContent = new StringContent(_requestString, Encoding.UTF8, "application/json");

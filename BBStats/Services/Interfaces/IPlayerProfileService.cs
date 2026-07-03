@@ -1,6 +1,6 @@
 using BBStats.Models.UI;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Interfaces;
 
 public interface IPlayerProfileService
 {

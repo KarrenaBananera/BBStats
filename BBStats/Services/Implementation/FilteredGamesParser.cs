@@ -1,13 +1,14 @@
 using BBStats.Data;
+using BBStats.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class FilteredGamesParser : IGamesParser, IHostedService
 {
-	private const int MaxSeenGames = 250;
+	private const int MaxSeenGames = 5000;
 
 	private readonly GamesParser _parser = new();
 	private readonly IServiceScopeFactory _scopeFactory;
