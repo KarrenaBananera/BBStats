@@ -14,7 +14,10 @@
     <None Update="games-fetcher.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Services\RequestString.txt">
+    <Content Include="Services\Implementation\RequestString.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Services\Implementation\HistoricalRequestString.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

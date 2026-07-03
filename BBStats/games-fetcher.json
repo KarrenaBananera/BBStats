@@ -4,5 +4,10 @@
     "UrlForFront": "89.167.76.6:5000",
     "Enabled": true,
     "FetchIntervalSeconds": 60
+  },
+  "HistoricalGamesFetcher": {
+    "BaseUrl": "http://89.167.76.6:2000/",
+    "Enabled": true,
+    "FetchIntervalSeconds": 30000
   }
 }

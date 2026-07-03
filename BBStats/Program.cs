@@ -36,15 +36,15 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AddPageRoute("/Top", "Top");
     options.Conventions.AddPageRoute("/Top", "Top/Index");
 });
-builder.Services.AddSingleton<FilteredGamesParser>();
-builder.Services.AddSingleton<IGamesParser>(sp => sp.GetRequiredService<FilteredGamesParser>());
-builder.Services.AddHostedService(sp => sp.GetRequiredService<FilteredGamesParser>());
+builder.Services.AddSingleton<BBStats.Services.Implementation.FilteredGamesParser>();
+builder.Services.AddSingleton<BBStats.Services.Interfaces.IGamesParser>(sp => sp.GetRequiredService<BBStats.Services.Implementation.FilteredGamesParser>());
+builder.Services.AddHostedService(sp => sp.GetRequiredService<BBStats.Services.Implementation.FilteredGamesParser>());
 builder.Services.AddTransient<IGamesRepository,GameRepository>();
-builder.Services.AddScoped<ICharacterStatisticsService, CharacterStatisticsService>();
-builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
-builder.Services.AddScoped<IPlayerProfileService, PlayerProfileService>();
-builder.Services.AddScoped<IPlayerCharacterStatsService, PlayerCharacterStatsService>();
-builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.ICharacterStatisticsService, BBStats.Services.Implementation.CharacterStatisticsService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.ITopPlayersService, BBStats.Services.Implementation.TopPlayersService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.IPlayerProfileService, BBStats.Services.Implementation.PlayerProfileService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.IPlayerCharacterStatsService, BBStats.Services.Implementation.PlayerCharacterStatsService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.IPlayerSearchService, BBStats.Services.Implementation.PlayerSearchService>();
 builder.Services.AddAuthorization(); // just adding it explicity
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -64,6 +64,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.Configure<GamesFetcherOptions>(
 	builder.Configuration.GetSection(GamesFetcherOptions.SectionName));
+builder.Services.Configure<HistoricalGamesFetcherOptions>(
+	builder.Configuration.GetSection(HistoricalGamesFetcherOptions.SectionName));
 
 var gamesFetcherOptions = builder.Configuration
 	.GetSection(GamesFetcherOptions.SectionName)
@@ -87,12 +89,18 @@ if (gamesFetcherOptions.FetchIntervalSeconds < 1)
 		"GamesFetcher:FetchIntervalSeconds must be at least 1.");
 }
 
-builder.Services.AddHttpClient<GamesFetcherClient>(client =>
+builder.Services.AddHttpClient<BBStats.Services.Implementation.GamesFetcherClient>(client =>
 {
 	client.Timeout = TimeSpan.FromSeconds(120);
 });
 
-builder.Services.AddHostedService<GamesProcessingService>();
+builder.Services.AddHttpClient<BBStats.Services.Implementation.HistoricalGamesFetcherClient>(client =>
+{
+	client.Timeout = TimeSpan.FromSeconds(120);
+});
+
+builder.Services.AddHostedService<BBStats.Services.Implementation.GamesProcessingService>();
+builder.Services.AddHostedService<BBStats.Services.Implementation.HistoricalGamesProcessingService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
