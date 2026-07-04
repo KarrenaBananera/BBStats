@@ -95,6 +95,10 @@ public class HistoricalGamesProcessingService : BackgroundService
 					}
 
 					page++;
+
+					// Delay 30 seconds between requests for the next page to not overload the server
+					_logger.LogInformation("Waiting 30 seconds before fetching the next page...");
+					await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 				}
 
 				_logger.LogInformation("Finished fetching historical games. Total parsed and saved: {Total}", totalFetched);
