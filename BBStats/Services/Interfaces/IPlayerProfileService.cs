@@ -1,6 +1,6 @@
 using BBStats.Models.UI;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Interfaces;
 
 public interface IPlayerProfileService
 {
@@ -8,6 +8,7 @@ public interface IPlayerProfileService
 		long playerId,
 		string characterSlug,
 		int pageNumber,
+		bool includeIgnored,
 		CancellationToken cancellationToken = default);
 }
 

@@ -1,8 +1,9 @@
 using BBStats.Data;
 using BBStats.Models.UI;
+using BBStats.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class PlayerCharacterStatsService : IPlayerCharacterStatsService
 {
@@ -27,6 +28,7 @@ public class PlayerCharacterStatsService : IPlayerCharacterStatsService
 		}
 
 		var hasCharacter = await _dbContext.PlayersCharactersStats
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.AnyAsync(stat => stat.PlayerId == playerId && stat.CharacterId == characterId, cancellationToken);
 
@@ -36,6 +38,7 @@ public class PlayerCharacterStatsService : IPlayerCharacterStatsService
 		}
 
 		var gameRows = await _dbContext.PlayersGames
+			.IgnoreQueryFilters()
 			.AsNoTracking()
 			.Include(pg => pg.Game)
 			.Where(pg => pg.PlayerId == playerId && pg.CharacterId == characterId)
@@ -43,8 +46,8 @@ public class PlayerCharacterStatsService : IPlayerCharacterStatsService
 				pg.Game.PlayerAId == playerId ? pg.Game.PlayerBId : pg.Game.PlayerAId,
 				pg.Game.PlayerAId == playerId ? pg.Game.PlayerB : pg.Game.PlayerA,
 				pg.Game.PlayerAId == playerId ? pg.Game.CharacterBId : pg.Game.CharacterAId,
-				(pg.Game.PlayerAId == playerId && pg.Game.IsPlayerAWin) ||
-				(pg.Game.PlayerBId == playerId && !pg.Game.IsPlayerAWin)))
+				pg.Game.PlayerAId == playerId && pg.Game.IsPlayerAWin ||
+				pg.Game.PlayerBId == playerId && !pg.Game.IsPlayerAWin))
 			.ToListAsync(cancellationToken);
 
 		if (gameRows.Count == 0)

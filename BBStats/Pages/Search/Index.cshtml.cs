@@ -1,5 +1,6 @@
 using BBStats.Models.UI;
-using BBStats.Services;
+using BBStats.Services.Implementation;
+using BBStats.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -28,7 +29,7 @@ public class IndexModel : PageModel
 			return Page();
 		}
 
-		if (SteamId.TryParse(query, out var steamId))
+		if (BBStats.Services.Implementation.SteamId.TryParse(query, out var steamId))
 		{
 			if (!await _playerSearchService.PlayerExistsAsync(steamId, cancellationToken))
 			{
@@ -52,7 +53,9 @@ public class IndexModel : PageModel
 			});
 		}
 
-		var results = await _playerSearchService.SearchByNameAsync(query, cancellationToken);
+		var includeIgnored = true;
+
+		var results = await _playerSearchService.SearchByNameAsync(query, includeIgnored, cancellationToken);
 		Search = new PlayerSearchPageViewModel
 		{
 			Query = query,

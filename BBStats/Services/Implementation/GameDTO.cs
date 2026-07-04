@@ -1,4 +1,4 @@
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public record class GameDTO
 {

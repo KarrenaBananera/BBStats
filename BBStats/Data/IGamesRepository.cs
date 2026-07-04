@@ -1,4 +1,4 @@
-﻿using BBStats.Services;
+﻿using BBStats.Services.Implementation;
 
 namespace BBStats.Data;
 

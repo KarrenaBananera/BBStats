@@ -3,10 +3,32 @@ using BBStats.Data;
 using BBStats.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies; // For cookie authentication
 
 var builder = WebApplication.CreateBuilder(args);
 
+var adminUsername = builder.Configuration["AdminSettings:Username"];
+var adminPassword = builder.Configuration["AdminSettings:Password"];
+
+if (string.IsNullOrWhiteSpace(adminUsername) || string.IsNullOrWhiteSpace(adminPassword) ||
+    adminUsername == "enter a username here" || adminPassword == "enter a password here")
+{
+    throw new InvalidOperationException(
+        "AdminSettings:Username and AdminSettings:Password must be configured with non-default values and be not blank.");
+}
+
 builder.Configuration.AddJsonFile("games-fetcher.json", optional: false, reloadOnChange: true);
+
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Admin/Login";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
+        options.SlidingExpiration = true;
+    });
+
 
 builder.Services.AddOutputCache();
 builder.Services.AddRazorPages(options =>
@@ -14,16 +36,16 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AddPageRoute("/Top", "Top");
     options.Conventions.AddPageRoute("/Top", "Top/Index");
 });
-builder.Services.AddSingleton<FilteredGamesParser>();
-builder.Services.AddSingleton<IGamesParser>(sp => sp.GetRequiredService<FilteredGamesParser>());
-builder.Services.AddHostedService(sp => sp.GetRequiredService<FilteredGamesParser>());
+builder.Services.AddSingleton<BBStats.Services.Implementation.FilteredGamesParser>();
+builder.Services.AddSingleton<BBStats.Services.Interfaces.IGamesParser>(sp => sp.GetRequiredService<BBStats.Services.Implementation.FilteredGamesParser>());
+builder.Services.AddHostedService(sp => sp.GetRequiredService<BBStats.Services.Implementation.FilteredGamesParser>());
 builder.Services.AddTransient<IGamesRepository,GameRepository>();
-builder.Services.AddScoped<ICharacterStatisticsService, CharacterStatisticsService>();
-builder.Services.AddScoped<ITopPlayersService, TopPlayersService>();
-builder.Services.AddScoped<IPlayerProfileService, PlayerProfileService>();
-builder.Services.AddScoped<IPlayerCharacterStatsService, PlayerCharacterStatsService>();
-builder.Services.AddScoped<IPlayerSearchService, PlayerSearchService>();
-
+builder.Services.AddScoped<BBStats.Services.Interfaces.ICharacterStatisticsService, BBStats.Services.Implementation.CharacterStatisticsService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.ITopPlayersService, BBStats.Services.Implementation.TopPlayersService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.IPlayerProfileService, BBStats.Services.Implementation.PlayerProfileService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.IPlayerCharacterStatsService, BBStats.Services.Implementation.PlayerCharacterStatsService>();
+builder.Services.AddScoped<BBStats.Services.Interfaces.IPlayerSearchService, BBStats.Services.Implementation.PlayerSearchService>();
+builder.Services.AddAuthorization(); // just adding it explicity
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -42,6 +64,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.Configure<GamesFetcherOptions>(
 	builder.Configuration.GetSection(GamesFetcherOptions.SectionName));
+builder.Services.Configure<HistoricalGamesFetcherOptions>(
+	builder.Configuration.GetSection(HistoricalGamesFetcherOptions.SectionName));
 
 var gamesFetcherOptions = builder.Configuration
 	.GetSection(GamesFetcherOptions.SectionName)
@@ -65,12 +89,18 @@ if (gamesFetcherOptions.FetchIntervalSeconds < 1)
 		"GamesFetcher:FetchIntervalSeconds must be at least 1.");
 }
 
-builder.Services.AddHttpClient<GamesFetcherClient>(client =>
+builder.Services.AddHttpClient<BBStats.Services.Implementation.GamesFetcherClient>(client =>
 {
 	client.Timeout = TimeSpan.FromSeconds(120);
 });
 
-builder.Services.AddHostedService<GamesProcessingService>();
+builder.Services.AddHttpClient<BBStats.Services.Implementation.HistoricalGamesFetcherClient>(client =>
+{
+	client.Timeout = TimeSpan.FromSeconds(120);
+});
+
+builder.Services.AddHostedService<BBStats.Services.Implementation.GamesProcessingService>();
+builder.Services.AddHostedService<BBStats.Services.Implementation.HistoricalGamesProcessingService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -92,8 +122,10 @@ app.UseStaticFiles(new StaticFileOptions
     OnPrepareResponse = StaticFileCacheHeaders.ApplyLongTermImageCache
 });
 app.UseRouting();
-app.UseOutputCache();
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseOutputCache();
 app.MapRazorPages();
 
 app.Run();

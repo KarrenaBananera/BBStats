@@ -1,5 +1,5 @@
 using BBStats.Models.UI;
-using BBStats.Services;
+using BBStats.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.OutputCaching;

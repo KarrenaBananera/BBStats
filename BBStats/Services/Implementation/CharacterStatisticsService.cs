@@ -1,8 +1,9 @@
 using BBStats.Data;
 using BBStats.Models.UI;
+using BBStats.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Implementation;
 
 public class CharacterStatisticsService : ICharacterStatisticsService
 {
@@ -31,8 +32,8 @@ public class CharacterStatisticsService : ICharacterStatisticsService
 
 		var totalMatches = await characterGames.CountAsync(cancellationToken);
 		var wins = await characterGames.CountAsync(g =>
-			(g.CharacterAId == characterId && g.IsPlayerAWin) ||
-			(g.CharacterBId == characterId && !g.IsPlayerAWin),
+			g.CharacterAId == characterId && g.IsPlayerAWin ||
+			g.CharacterBId == characterId && !g.IsPlayerAWin,
 			cancellationToken);
 
 		var usagePercent = totalGamesCount > 0

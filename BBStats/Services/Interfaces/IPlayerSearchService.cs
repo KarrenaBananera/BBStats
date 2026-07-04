@@ -1,6 +1,6 @@
 using BBStats.Models.UI;
 
-namespace BBStats.Services;
+namespace BBStats.Services.Interfaces;
 
 public interface IPlayerSearchService
 {
@@ -10,5 +10,6 @@ public interface IPlayerSearchService
 
 	Task<IReadOnlyList<PlayerSearchResultItem>> SearchByNameAsync(
 		string query,
+		bool includeIgnored, 
 		CancellationToken cancellationToken = default);
 }
