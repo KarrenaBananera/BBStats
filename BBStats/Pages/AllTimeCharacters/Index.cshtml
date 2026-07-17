@@ -1,0 +1,18 @@
+@page "/AllTimeCharacters/{character?}"
+@model BBStats.Pages.AllTimeCharacters.IndexModel
+@{
+    ViewData["Title"] = $"All Time {Model.CharacterDisplayName} Top";
+}
+
+<div class="mainDiv container py-4">
+    @{
+        ViewData["PreviousPageUrl"] = Model.Top.HasPreviousPage
+            ? Model.GetPageUrl(Model.Top.PageNumber - 1)
+            : null;
+        ViewData["NextPageUrl"] = Model.Top.HasNextPage
+            ? Model.GetPageUrl(Model.Top.PageNumber + 1)
+            : null;
+    }
+    <partial name="_TopPlayersTable" model="Model.Top" />
+    <partial name="_TopPlayersPagination" model="Model.Top" />
+</div>

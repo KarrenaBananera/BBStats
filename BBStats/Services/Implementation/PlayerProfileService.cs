@@ -119,8 +119,8 @@ public class PlayerProfileService : IPlayerProfileService
 			SteamId = playerId.ToString(),
 			CharacterSlug = slug,
 			CharacterDisplayName = activeStat.Character.Name,
-			OverallRank = isIgnored ? 0 :overallRank,
-			CharacterRank = isIgnored ? 0 :characterRank,
+			OverallRank = isIgnored || activeStat.PlayerRating.RatingDeviation > 130 ? 0 : overallRank,
+			CharacterRank = isIgnored || activeStat.PlayerRating.RatingDeviation > 130 ? 0 : characterRank,
 			Rating = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.CurrentRating),
 			RatingDeviation = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.RatingDeviation) * 2,
 			Wins = activeStat.Wins,
@@ -308,7 +308,8 @@ public class PlayerProfileService : IPlayerProfileService
 		CancellationToken cancellationToken)
 	{
 		var rating = activeStat.PlayerRating.CurrentRating;
-		var query = _dbContext.PlayersCharactersStats.AsNoTracking();
+		var query = _dbContext.PlayersCharactersStats.AsNoTracking()
+			.Where(stat => stat.PlayerRating.RatingDeviation <= 130);
 
 		if (characterId.HasValue)
 		{

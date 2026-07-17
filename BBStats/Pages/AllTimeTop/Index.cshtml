@@ -1,0 +1,25 @@
+@page "/AllTime"
+@model BBStats.Pages.AllTimeTop.IndexModel
+@{
+    ViewData["Title"] = "All Time Top Players";
+}
+
+<div class="mainDiv container py-4">
+    <section id="featured-players-section" class="featured-players-section mb-4" hidden>
+        <div class="secondLevelDiv">
+            <h2 class="featured-players-title">Featured Players</h2>
+            <div id="featured-players-list" class="featured-players-list"></div>
+        </div>
+    </section>
+
+    @{
+        ViewData["PreviousPageUrl"] = Model.Top.HasPreviousPage
+            ? Model.GetPageUrl(Model.Top.PageNumber - 1)
+            : null;
+        ViewData["NextPageUrl"] = Model.Top.HasNextPage
+            ? Model.GetPageUrl(Model.Top.PageNumber + 1)
+            : null;
+    }
+    <partial name="_TopPlayersTable" model="Model.Top" />
+    <partial name="_TopPlayersPagination" model="Model.Top" />
+</div>

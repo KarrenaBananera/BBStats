@@ -27,6 +27,30 @@
                     }
                 </div>
             </li>
+            <li><a asp-page="/AllTimeTop/Index">All time</a></li>
+            <li class="nav-dropdown" data-nav-dropdown>
+                <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                    All time Characters
+                </button>
+                <div class="nav-dropdown-menu" role="menu">
+                    @foreach (var character in CharactersSeed.All)
+                    {
+                        var slug = character.Name.ToLowerInvariant();
+                        <a asp-page="/AllTimeCharacters/Index"
+                           asp-route-character="@slug"
+                           class="nav-dropdown-item"
+                           role="menuitem">
+                            <span class="nav-dropdown-item-label">
+                                <img src="@CharacterImages.GetSmallIconUrl(character.Name)"
+                                     alt=""
+                                     class="nav-dropdown-character-icon"
+                                     loading="lazy" />
+                                @character.Name
+                            </span>
+                        </a>
+                    }
+                </div>
+            </li>
             <li class="nav-dropdown" data-nav-dropdown>
                 <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
                     Statistics

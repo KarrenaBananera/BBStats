@@ -17,6 +17,7 @@ public class TopPlayersService : ITopPlayersService
 	public async Task<TopPageViewModel> GetPageAsync(
 		int pageNumber,
 		int? characterId = null,
+		bool isAllTime = false,
 		CancellationToken cancellationToken = default)
 	{
 		pageNumber = Math.Max(1, pageNumber);
@@ -31,6 +32,15 @@ public class TopPlayersService : ITopPlayersService
 		if (characterId.HasValue)
 		{
 			query = query.Where(stat => stat.CharacterId == characterId.Value);
+		}
+
+		if (isAllTime)
+		{
+			query = query.Where(stat => (stat.Wins + stat.Losses) >= 100);
+		}
+		else
+		{
+			query = query.Where(stat => stat.PlayerRating.RatingDeviation <= 130);
 		}
 
 		var ignoredPlayerIds = await _dbContext.IgnoredPlayers
