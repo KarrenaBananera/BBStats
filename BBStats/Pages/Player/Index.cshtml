@@ -42,19 +42,9 @@
             <div class="secondLevelDiv">
                 <h2 class="profile-matches-title">Matches</h2>
 
-                @if (Model.Profile.HasMatches)
-                {
-                    <partial name="Profile/_MatchSeriesList" model="Model.Profile" />
-                }
-                else if (!string.IsNullOrEmpty(Model.Profile.EmptyMessage))
-                {
-                    <p class="text-white-50 mb-0">@Model.Profile.EmptyMessage</p>
-                }
-
-                @{
-                    ViewData["PaginationClass"] = Model.Profile.HasMatches ? null : "mt-4";
-                }
-                <partial name="Profile/_ProfilePagination" model="Model.Profile" />
+                <div id="matches-container">
+                    <partial name="Profile/_MatchesSection" model="Model.Profile" />
+                </div>
             </div>
         </div>
     </div>

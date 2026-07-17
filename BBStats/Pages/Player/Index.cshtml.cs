@@ -130,4 +130,28 @@ public class IndexModel : PageModel
 
 		return Page();
 	}
+
+	public async Task<IActionResult> OnGetMatchesAsync(CancellationToken cancellationToken)
+	{
+		if (!long.TryParse(SteamId, out var playerId))
+		{
+			return NotFound();
+		}
+
+		var page = MatchPage is null or < 1 ? 1 : MatchPage.Value;
+
+		var result = await _playerProfileService.GetProfileAsync(
+			playerId,
+			Character,
+			page,
+			true,
+			cancellationToken);
+
+		if (result.Profile is null)
+		{
+			return NotFound();
+		}
+
+		return Partial("Profile/_MatchesSection", result.Profile);
+	}
 }

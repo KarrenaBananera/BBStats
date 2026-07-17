@@ -1,0 +1,16 @@
+@using BBStats.Models.UI
+@model PlayerProfilePageViewModel
+
+@if (Model.HasMatches)
+{
+    <partial name="Profile/_MatchSeriesList" model="Model" />
+}
+else if (!string.IsNullOrEmpty(Model.EmptyMessage))
+{
+    <p class="text-white-50 mb-0">@Model.EmptyMessage</p>
+}
+
+@{
+    ViewData["PaginationClass"] = Model.HasMatches ? null : "mt-4";
+}
+<partial name="Profile/_ProfilePagination" model="Model" />
