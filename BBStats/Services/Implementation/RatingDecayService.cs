@@ -31,7 +31,7 @@ public class RatingDecayService : BackgroundService
 				var statsToDecay = await dbContext.PlayersCharactersStats
 					.Where(s => s.LastPlayedAt < yesterday && 
 								(s.LastDecayAppliedAt == null || s.LastDecayAppliedAt < today) &&
-								s.PlayerRating.RatingDeviation < 350)
+								s.PlayerRating.RatingDeviation < 175)
 					.ToListAsync(stoppingToken);
 
 				if (statsToDecay.Count > 0)

@@ -3,7 +3,7 @@ using BBStats.Data;
 public static class Glicko2Calculator
 {
 	private const double PI2 = Math.PI * Math.PI;
-	private const double TAU = 0.5;
+	private const double TAU = 0.6;
 	private const double EPSILON = 0.000001;
 
 	public static (Rating playerA, Rating playerB) CalculateRating(Rating playerA, Rating playerB, bool isPlayerAWin)
@@ -45,7 +45,7 @@ public static class Glicko2Calculator
 	{
 		return new Rating(
 			CurrentRating: customRating ?? 1500,
-			RatingDeviation: customDeviation ?? 350,
+			RatingDeviation: customDeviation ?? 225,
 			Volatility: customVolatility ?? 0.075
 		);
 	}
@@ -55,7 +55,7 @@ public static class Glicko2Calculator
 		double phi = rating.RatingDeviation / 173.7178;
 		double sigma = rating.Volatility;
 		double phiStar = Math.Sqrt(phi * phi + sigma * sigma);
-		double newDeviation = Math.Min(phiStar * 173.7178, 350.0);
+		double newDeviation = Math.Min(phiStar * 173.7178, 175.0);
 
 		return new Rating(rating.CurrentRating, newDeviation, rating.Volatility);
 	}
