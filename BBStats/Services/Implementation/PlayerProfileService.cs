@@ -122,7 +122,7 @@ public class PlayerProfileService : IPlayerProfileService
 			OverallRank = isIgnored ? 0 :overallRank,
 			CharacterRank = isIgnored ? 0 :characterRank,
 			Rating = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.CurrentRating),
-			RatingDeviation = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.RatingDeviation),
+			RatingDeviation = isIgnored ? 0 : (int)Math.Round(activeStat.PlayerRating.RatingDeviation) * 2,
 			Wins = activeStat.Wins,
 			Losses = activeStat.Losses,
 			WinratePercent = winratePercent,

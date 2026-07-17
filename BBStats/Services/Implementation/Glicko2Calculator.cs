@@ -1,4 +1,4 @@
-﻿using BBStats.Data;
+using BBStats.Data;
 
 public static class Glicko2Calculator
 {
@@ -45,9 +45,19 @@ public static class Glicko2Calculator
 	{
 		return new Rating(
 			CurrentRating: customRating ?? 1500,
-			RatingDeviation: customDeviation ?? 125,
+			RatingDeviation: customDeviation ?? 350,
 			Volatility: customVolatility ?? 0.075
 		);
+	}
+
+	public static Rating ApplyDecay(Rating rating)
+	{
+		double phi = rating.RatingDeviation / 173.7178;
+		double sigma = rating.Volatility;
+		double phiStar = Math.Sqrt(phi * phi + sigma * sigma);
+		double newDeviation = Math.Min(phiStar * 173.7178, 350.0);
+
+		return new Rating(rating.CurrentRating, newDeviation, rating.Volatility);
 	}
 
 	private static (double mu, double phi, double sigma) UpdatePlayer(

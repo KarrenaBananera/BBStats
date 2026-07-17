@@ -101,6 +101,7 @@ builder.Services.AddHttpClient<BBStats.Services.Implementation.HistoricalGamesFe
 
 builder.Services.AddHostedService<BBStats.Services.Implementation.GamesProcessingService>();
 builder.Services.AddHostedService<BBStats.Services.Implementation.HistoricalGamesProcessingService>();
+builder.Services.AddHostedService<BBStats.Services.Implementation.RatingDecayService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

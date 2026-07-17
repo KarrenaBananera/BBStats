@@ -1,4 +1,4 @@
-﻿namespace BBStats.Data.Entites;
+namespace BBStats.Data.Entites;
 
 public class PlayerCharacterStat
 {
@@ -11,5 +11,7 @@ public class PlayerCharacterStat
 	public Rating PlayerRating { get; set; }
 	public Character Character { get; set; }
 	public List<PlayerGame> Games { get ; set; }
+	public DateOnly LastPlayedAt { get; set; }
+	public DateOnly? LastDecayAppliedAt { get; set; }
 
 }

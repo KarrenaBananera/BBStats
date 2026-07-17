@@ -135,6 +135,9 @@ public class GameRepository : IGamesRepository
 		PlayerCharacterStat characterStatB,
 		Game game)
 	{
+		characterStatA.LastPlayedAt = DateOnly.FromDateTime(game.PlayedAt);
+		characterStatB.LastPlayedAt = DateOnly.FromDateTime(game.PlayedAt);
+
 		if (game.IsPlayerAWin)
 		{
 			characterStatA.Wins++;
