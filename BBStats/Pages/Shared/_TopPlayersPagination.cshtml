@@ -13,7 +13,12 @@
         <span class="tableButton is-disabled" aria-disabled="true">&lt;</span>
     }
 
-    <span class="page-info mx-4">@Model.PageNumber</span>
+    <div class="page-info mx-4 d-inline-flex align-items-center gap-2">
+        <form method="get" class="m-0 p-0 d-inline-flex align-items-center">
+            <input type="number" name="page" class="form-control form-control-sm text-bg-dark border-secondary text-center no-spinners" style="width: 70px;" value="@Model.PageNumber" min="1" max="@Model.TotalPages" aria-label="Page number" title="Press Enter to go to page" />
+        </form>
+        <span class="text-secondary">/ @Model.TotalPages</span>
+    </div>
 
     @if (Model.HasNextPage && !string.IsNullOrEmpty(nextUrl))
     {
