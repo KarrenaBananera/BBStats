@@ -36,7 +36,7 @@ public class TopPlayersService : ITopPlayersService
 
 		if (isAllTime)
 		{
-			query = query.Where(stat => (stat.Wins + stat.Losses) >= 100);
+			query = query.Where(stat => (stat.Wins + stat.Losses) >= 30);
 		}
 		else
 		{
