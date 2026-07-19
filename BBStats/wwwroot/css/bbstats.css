@@ -530,6 +530,7 @@ header nav ul {
     min-width: 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     transform: none;
+    max-height: 65vh;
   }
   .nav-dropdown.is-open .nav-dropdown-menu {
     transform: none;
