@@ -34,6 +34,9 @@
                 if (response.ok) {
                     var html = await response.text();
                     matchesContainer.innerHTML = html;
+                    if (typeof window.formatLocalDatetimes === 'function') {
+                        window.formatLocalDatetimes(matchesContainer);
+                    }
                     matchesContainer.style.opacity = '1';
                     // Scroll to top of matches container
                     matchesContainer.closest('.secondLevelDiv').scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -38,4 +38,7 @@
     } else {
         formatLocalDatetimes();
     }
+
+    // Expose globally for AJAX updates
+    window.formatLocalDatetimes = formatLocalDatetimes;
 })();
