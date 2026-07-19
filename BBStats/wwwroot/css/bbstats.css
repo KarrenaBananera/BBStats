@@ -438,6 +438,7 @@ header nav .nav-dropdown.is-open .nav-dropdown-toggle::before {
   background-color: rgba(255, 255, 255, 0.1);
 }
 header nav ul {
+  position: relative;
   list-style: none;
   display: flex;
   gap: 1.5rem;
@@ -464,7 +465,8 @@ header nav ul {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.15rem 1rem;
-  overflow: visible;
+  overflow-y: auto;
+  max-height: calc(100vh - 4.5rem);
 }
 
 .nav-dropdown.is-open .nav-dropdown-menu {
@@ -519,15 +521,18 @@ header nav ul {
   }
 }
 @media (max-width: 575.98px) {
+  .nav-dropdown {
+    position: static;
+  }
   .nav-dropdown-menu {
-    left: 50%;
-    width: min(520px, 100vw - 1.5rem);
-    min-width: min(520px, 100vw - 1.5rem);
+    left: 0;
+    width: 100%;
+    min-width: 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    transform: translateX(-50%);
+    transform: none;
   }
   .nav-dropdown.is-open .nav-dropdown-menu {
-    transform: translateX(-50%);
+    transform: none;
   }
 }
 table {
@@ -541,7 +546,8 @@ table {
 }
 
 .table-scroll,
-.profile-characters-panel {
+.profile-characters-panel,
+.nav-dropdown-menu {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: #495057 #111214;
@@ -555,26 +561,30 @@ table {
 }
 
 .table-scroll::-webkit-scrollbar,
-.profile-characters-panel::-webkit-scrollbar {
+.profile-characters-panel::-webkit-scrollbar,
+.nav-dropdown-menu::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 .table-scroll::-webkit-scrollbar-track,
-.profile-characters-panel::-webkit-scrollbar-track {
+.profile-characters-panel::-webkit-scrollbar-track,
+.nav-dropdown-menu::-webkit-scrollbar-track {
   background: #111214;
   border-radius: 999px;
 }
 
 .table-scroll::-webkit-scrollbar-thumb,
-.profile-characters-panel::-webkit-scrollbar-thumb {
+.profile-characters-panel::-webkit-scrollbar-thumb,
+.nav-dropdown-menu::-webkit-scrollbar-thumb {
   background-color: #495057;
   border-radius: 999px;
   border: 2px solid #111214;
 }
 
 .table-scroll::-webkit-scrollbar-thumb:hover,
-.profile-characters-panel::-webkit-scrollbar-thumb:hover {
+.profile-characters-panel::-webkit-scrollbar-thumb:hover,
+.nav-dropdown-menu::-webkit-scrollbar-thumb:hover {
   background-color: #6c757d;
 }
 
@@ -1195,6 +1205,16 @@ tbody tr:last-child td:last-child {
   .series-games {
     padding-left: 1.75rem;
   }
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinners[type=number] {
+  -moz-appearance: textfield;
 }
 
 /*# sourceMappingURL=bbstats.css.map */
