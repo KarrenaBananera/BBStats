@@ -3,7 +3,60 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@(ViewData["Title"] ?? "BlazBlueStats")</title>
+    @{
+        var pageTitle = ViewData["Title"] as string ?? "BB Elo — BlazBlue Centralfiction Player Ratings";
+        var pageDescription = ViewData["Description"] as string
+            ?? "Ranked BlazBlue Centralfiction ratings. Check BB player Elo, character leaderboards, and match stats.";
+        var robots = ViewData["Robots"] as string ?? "index, follow";
+        var canonicalPath = ViewData["CanonicalPath"] as string ?? Context.Request.Path.Value ?? "/";
+        var siteOrigin = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var canonicalUrl = canonicalPath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? canonicalPath
+            : siteOrigin + canonicalPath;
+        var embedTitle = ViewData["OgTitle"] as string ?? pageTitle;
+        var embedDescription = ViewData["OgDescription"] as string ?? pageDescription;
+        var embedImagePath = ViewData["OgImage"] as string;
+        string? embedImageUrl = null;
+        if (!string.IsNullOrWhiteSpace(embedImagePath))
+        {
+            embedImageUrl = embedImagePath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                ? embedImagePath
+                : new Uri(new Uri(siteOrigin + "/"), embedImagePath.TrimStart('/')).AbsoluteUri;
+        }
+    }
+    <title>@pageTitle</title>
+    <meta name="description" content="@pageDescription" />
+    <meta name="robots" content="@robots" />
+    <link rel="canonical" href="@canonicalUrl" />
+    <meta property="og:site_name" content="BB Stats" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@embedTitle" />
+    <meta property="og:description" content="@embedDescription" />
+    <meta property="og:url" content="@canonicalUrl" />
+    @if (embedImageUrl is not null)
+    {
+        <meta property="og:image" content="@embedImageUrl" />
+        <meta property="og:image:alt" content="@embedTitle" />
+        <meta name="twitter:image" content="@embedImageUrl" />
+    }
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="@embedTitle" />
+    <meta name="twitter:description" content="@embedDescription" />
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "name": "BB Stats",
+        "alternateName": ["BlazBlue Stats", "BB Elo", "BlazBlue Centralfiction Ratings"],
+        "url": "@siteOrigin/",
+        "description": "BlazBlue Centralfiction player Elo, rankings, and match stats.",
+        "potentialAction": {
+            "@@type": "SearchAction",
+            "target": "@siteOrigin/Search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
     <link rel="icon" type="image/png" href="~/data/icon/BlazBlue_Clone_Phantasma_Jin_Kisaragi_Icon.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />

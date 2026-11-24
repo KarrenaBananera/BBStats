@@ -1,0 +1,72 @@
+@using BBStats.Data
+@model PlayerProfilePageViewModel
+@{
+    var formAction = PlayerPageUrl.For(Url, Model.SteamId, Model.CharacterSlug);
+    var activeOpponentSlug = Model.SeriesFilter.OpponentCharacterSlug;
+}
+<form id="match-filters"
+      class="match-filters-form"
+      method="get"
+      action="@formAction"
+      data-matches-path="@formAction"
+      data-current-page="@Model.CurrentPage"
+      role="search"
+      novalidate>
+    <div class="match-filters">
+        <label class="match-filter-field match-filter-field--elo" for="match-filter-min">
+            Min current ELO
+            <input id="match-filter-min"
+                   name="minElo"
+                   type="number"
+                   inputmode="numeric"
+                   step="1"
+                   value="@Model.SeriesFilter.MinOpponentElo"
+                   class="form-control form-control-sm match-filter-input no-spinners"
+                   placeholder="Any"
+                   autocomplete="off" />
+        </label>
+        <label class="match-filter-field match-filter-field--elo" for="match-filter-max">
+            Max current ELO
+            <input id="match-filter-max"
+                   name="maxElo"
+                   type="number"
+                   inputmode="numeric"
+                   step="1"
+                   value="@Model.SeriesFilter.MaxOpponentElo"
+                   class="form-control form-control-sm match-filter-input no-spinners"
+                   placeholder="Any"
+                   autocomplete="off" />
+        </label>
+        <label class="match-filter-field match-filter-field--name" for="match-filter-name">
+            Opponent name
+            <input id="match-filter-name"
+                   name="opponent"
+                   type="search"
+                   maxlength="@MatchSeriesFilter.MaxOpponentNameLength"
+                   value="@Model.SeriesFilter.OpponentName"
+                   class="form-control form-control-sm match-filter-input"
+                   placeholder="Contains…"
+                   autocomplete="off" />
+        </label>
+        <label class="match-filter-field match-filter-field--character" for="match-filter-character">
+            Opponent character
+            <select id="match-filter-character"
+                    name="opponentCharacter"
+                    class="form-select form-select-sm match-filter-input">
+                <option value="">Any character</option>
+                @foreach (var character in CharactersSeed.All)
+                {
+                    var slug = character.Name.ToLowerInvariant();
+                    if (slug == activeOpponentSlug)
+                    {
+                        <option value="@slug" selected>@character.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@slug">@character.Name</option>
+                    }
+                }
+            </select>
+        </label>
+    </div>
+</form>

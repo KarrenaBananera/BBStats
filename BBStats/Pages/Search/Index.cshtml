@@ -1,7 +1,12 @@
 @page "/Search"
 @model BBStats.Pages.Search.IndexModel
 @{
-    ViewData["Title"] = "Search Players";
+    ViewData["Title"] = "Search BB Players — BlazBlue Elo";
+    ViewData["Description"] = "Find BlazBlue Centralfiction players by name or Steam ID and open their BB rating.";
+    if (Model.Search.HasSearched)
+    {
+        ViewData["Robots"] = "noindex, follow";
+    }
 }
 
 <div class="mainDiv container py-4">

@@ -42,6 +42,7 @@ public class CharacterStatsModel : PageModel
 		}
 
 		Stats = stats;
+		Response.Headers["X-Robots-Tag"] = "noindex";
 		return Page();
 	}
 }

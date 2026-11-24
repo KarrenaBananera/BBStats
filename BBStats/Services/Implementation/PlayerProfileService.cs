@@ -27,10 +27,12 @@ public class PlayerProfileService : IPlayerProfileService
 		string characterSlug,
 		int pageNumber,
 		bool includeIgnored = false,
+		MatchSeriesFilter? seriesFilter = null,
 		CancellationToken cancellationToken = default)
 	{
 		pageNumber = Math.Max(1, pageNumber);
 		var slug = characterSlug.Trim().ToLowerInvariant();
+		var filter = (seriesFilter ?? MatchSeriesFilter.None).Normalize();
 
 		var isIgnored = await _dbContext.IgnoredPlayers
 			.AnyAsync(x => x.PlayerId == playerId, cancellationToken);
@@ -72,7 +74,8 @@ public class PlayerProfileService : IPlayerProfileService
 				PlayerName = player.Name,
 				SteamId = playerId.ToString(),
 				CharacterSlug = slug,
-				EmptyMessage = "No recorded matches for this player yet."
+				EmptyMessage = "No recorded matches for this player yet.",
+				SeriesFilter = filter
 			});
 		}
 
@@ -84,7 +87,7 @@ public class PlayerProfileService : IPlayerProfileService
 		}
 
 		var activeStat = characterStats.First(stat => stat.CharacterId == characterId);
-		var allSets = await BuildMatchSeriesAsync(playerId, characterId, cancellationToken);
+		var allSets = await BuildMatchSeriesAsync(playerId, characterId, filter, cancellationToken);
 		var totalPages = allSets.Count == 0
 			? 1
 			: (int)Math.Ceiling(allSets.Count / (double)SetsPerPage);
@@ -131,36 +134,48 @@ public class PlayerProfileService : IPlayerProfileService
 			Series = pageSets,
 			CurrentPage = pageNumber,
 			TotalPages = totalPages,
-			EmptyMessage = allSets.Count == 0 ? "No recorded series for this character." : null
+			EmptyMessage = allSets.Count == 0
+				? filter.IsActive
+					? "No series match these filters."
+					: "No recorded series for this character."
+				: null,
+			SeriesFilter = filter
 		});
 	}
 
 	private async Task<List<MatchSeriesViewModel>> BuildMatchSeriesAsync(
 		long playerId,
 		int characterId,
+		MatchSeriesFilter filter,
 		CancellationToken cancellationToken)
 	{
 		var isIgnored = await _dbContext.IgnoredPlayers
 			.AnyAsync(x => x.PlayerId == playerId, cancellationToken);
 
-		var playerGames = await _dbContext.PlayersGames
-			.IgnoreQueryFilters()
-			.AsNoTracking()
-			.Include(pg => pg.Game)
-			.Where(pg => pg.PlayerId == playerId && pg.CharacterId == characterId)
-			.OrderBy(pg => pg.Game.PlayedAt)
-			.ThenBy(pg => pg.GameId)
-			.ToListAsync(cancellationToken);
-
-		if (playerGames.Count == 0)
+		int? opponentCharacterId = null;
+		if (filter.HasOpponentCharacter)
 		{
-			return [];
+			if (!CharactersSeed.CharactersNames.TryGetValue(filter.OpponentCharacterSlug!, out var parsedCharacterId))
+			{
+				return [];
+			}
+
+			opponentCharacterId = parsedCharacterId;
 		}
 
 		var characterNames = CharactersSeed.All.ToDictionary(c => c.Id, c => c.Name);
-		var contexts = playerGames
-			.Select(pg => MapGameContext(playerId, characterId, pg, characterNames))
-			.ToList();
+		var contexts = await LoadGameContextsAsync(
+			playerId,
+			characterId,
+			filter,
+			opponentCharacterId,
+			characterNames,
+			cancellationToken);
+
+		if (contexts.Count == 0)
+		{
+			return [];
+		}
 
 		var groupedSets = GroupIntoSets(contexts);
 		return groupedSets
@@ -170,13 +185,112 @@ public class PlayerProfileService : IPlayerProfileService
 			.ToList();
 	}
 
-	private static PlayerGameContext MapGameContext(
+	private async Task<List<PlayerGameContext>> LoadGameContextsAsync(
 		long playerId,
 		int characterId,
+		MatchSeriesFilter filter,
+		int? opponentCharacterId,
+		IReadOnlyDictionary<int, string> characterNames,
+		CancellationToken cancellationToken)
+	{
+		var query = _dbContext.PlayersGames
+			.IgnoreQueryFilters()
+			.AsNoTracking()
+			.Where(pg => pg.PlayerId == playerId && pg.CharacterId == characterId);
+
+		query = ApplyCharacterFilter(query, playerId, opponentCharacterId);
+
+		if (filter.HasOpponentName)
+		{
+			var opponentIds = await FindPlayerIdsByCurrentNameAsync(filter.OpponentName!, cancellationToken);
+			if (opponentIds.Count == 0)
+			{
+				return [];
+			}
+
+			query = query.Where(pg =>
+				(pg.Game.PlayerAId == playerId && opponentIds.Contains(pg.Game.PlayerBId)) ||
+				(pg.Game.PlayerBId == playerId && opponentIds.Contains(pg.Game.PlayerAId)));
+		}
+
+		query = ApplyCurrentEloFilter(query, playerId, filter);
+
+		var playerGames = await query
+			.Include(pg => pg.Game)
+			.OrderBy(pg => pg.Game.PlayedAt)
+			.ThenBy(pg => pg.GameId)
+			.ToListAsync(cancellationToken);
+
+		return playerGames
+			.Select(pg => MapGameContext(playerId, pg, pg.Game, characterNames))
+			.ToList();
+	}
+
+	private async Task<List<long>> FindPlayerIdsByCurrentNameAsync(
+		string opponentName,
+		CancellationToken cancellationToken)
+	{
+		var pattern = "%" + EscapeLike(opponentName) + "%";
+		return await _dbContext.Players
+			.IgnoreQueryFilters()
+			.AsNoTracking()
+			.Where(player => EF.Functions.Like(player.Name, pattern))
+			.Select(player => player.Id)
+			.ToListAsync(cancellationToken);
+	}
+
+	private static IQueryable<PlayerGame> ApplyCharacterFilter(
+		IQueryable<PlayerGame> query,
+		long playerId,
+		int? opponentCharacterId)
+	{
+		if (opponentCharacterId is not int characterFilterId)
+		{
+			return query;
+		}
+
+		return query.Where(pg =>
+			(pg.Game.PlayerAId == playerId && pg.Game.CharacterBId == characterFilterId) ||
+			(pg.Game.PlayerBId == playerId && pg.Game.CharacterAId == characterFilterId));
+	}
+
+	private IQueryable<PlayerGame> ApplyCurrentEloFilter(
+		IQueryable<PlayerGame> query,
+		long playerId,
+		MatchSeriesFilter filter)
+	{
+		if (!filter.HasEloBounds)
+		{
+			return query;
+		}
+
+		var minElo = filter.MinOpponentElo ?? int.MinValue;
+		var maxElo = filter.MaxOpponentElo ?? int.MaxValue;
+		var stats = _dbContext.PlayersCharactersStats.IgnoreQueryFilters().AsNoTracking();
+
+		return query.Where(pg =>
+			stats.Any(stat =>
+				((pg.Game.PlayerAId == playerId &&
+				  stat.PlayerId == pg.Game.PlayerBId &&
+				  stat.CharacterId == pg.Game.CharacterBId) ||
+				 (pg.Game.PlayerBId == playerId &&
+				  stat.PlayerId == pg.Game.PlayerAId &&
+				  stat.CharacterId == pg.Game.CharacterAId)) &&
+				(int)Math.Round(stat.PlayerRating.CurrentRating) >= minElo &&
+				(int)Math.Round(stat.PlayerRating.CurrentRating) <= maxElo));
+	}
+
+	private static string EscapeLike(string value) =>
+		value.Replace("[", "[[]", StringComparison.Ordinal)
+			.Replace("%", "[%]", StringComparison.Ordinal)
+			.Replace("_", "[_]", StringComparison.Ordinal);
+
+	private static PlayerGameContext MapGameContext(
+		long playerId,
 		PlayerGame playerGame,
+		Game game,
 		IReadOnlyDictionary<int, string> characterNames)
 	{
-		var game = playerGame.Game;
 		var isPlayerA = game.PlayerAId == playerId;
 		var opponentId = isPlayerA ? game.PlayerBId : game.PlayerAId;
 		var opponentCharacterId = isPlayerA ? game.CharacterBId : game.CharacterAId;
@@ -364,7 +478,7 @@ public class PlayerProfileService : IPlayerProfileService
 			return ($"−{Math.Abs(rounded)}", "text-danger");
 		}
 
-		return ("0", "text-muted");
+		return ("0", "text-white");
 	}
 
 	private static DateTime AsUtc(DateTime dateTime) =>

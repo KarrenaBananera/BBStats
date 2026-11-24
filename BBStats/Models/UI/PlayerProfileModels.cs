@@ -52,6 +52,44 @@ public class PlayerCharacterStatsViewModel
 	public IReadOnlyList<PlayerCharacterMatchupRow> CharacterMatchups { get; init; } = [];
 }
 
+public sealed class MatchSeriesFilter
+{
+	public const int MaxOpponentNameLength = 40;
+
+	public static MatchSeriesFilter None { get; } = new();
+
+	public int? MinOpponentElo { get; init; }
+	public int? MaxOpponentElo { get; init; }
+	public string? OpponentName { get; init; }
+	public string? OpponentCharacterSlug { get; init; }
+
+	public bool HasEloBounds => MinOpponentElo.HasValue || MaxOpponentElo.HasValue;
+	public bool HasOpponentName => !string.IsNullOrEmpty(OpponentName);
+	public bool HasOpponentCharacter => !string.IsNullOrEmpty(OpponentCharacterSlug);
+	public bool IsActive => HasEloBounds || HasOpponentName || HasOpponentCharacter;
+
+	public MatchSeriesFilter Normalize()
+	{
+		var name = string.IsNullOrWhiteSpace(OpponentName) ? null : OpponentName.Trim();
+		if (name is { Length: > MaxOpponentNameLength })
+		{
+			name = name[..MaxOpponentNameLength];
+		}
+
+		var slug = string.IsNullOrWhiteSpace(OpponentCharacterSlug)
+			? null
+			: OpponentCharacterSlug.Trim().ToLowerInvariant();
+
+		return new MatchSeriesFilter
+		{
+			MinOpponentElo = MinOpponentElo,
+			MaxOpponentElo = MaxOpponentElo,
+			OpponentName = name,
+			OpponentCharacterSlug = slug
+		};
+	}
+}
+
 public class PlayerProfilePageViewModel
 {
     public string PlayerName { get; init; } = "";
@@ -73,4 +111,5 @@ public class PlayerProfilePageViewModel
     public bool HasMatches => Series.Count > 0;
     public string? EmptyMessage { get; init; }
     public bool IsIgnored { get; set; }
+    public MatchSeriesFilter SeriesFilter { get; init; } = MatchSeriesFilter.None;
 }

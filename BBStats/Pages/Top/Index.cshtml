@@ -1,10 +1,17 @@
 @page "/"
 @model BBStats.Pages.Top.IndexModel
 @{
-    ViewData["Title"] = "Top Players";
+    var pageSuffix = Model.Top.PageNumber > 1 ? $" — Page {Model.Top.PageNumber}" : "";
+    ViewData["Title"] = "BB Elo — BlazBlue Centralfiction Player Ratings" + pageSuffix;
+    ViewData["Description"] = "Ranked BlazBlue Centralfiction ratings. Check BB player Elo, character leaderboards, and match stats.";
+    ViewData["OgTitle"] = "BB Stats";
+    ViewData["OgDescription"] = "Ranked Elo and player stats for BlazBlue Centralfiction.";
+    ViewData["OgImage"] = "/data/icon/BlazBlue_Clone_Phantasma_Jin_Kisaragi_Icon.png";
 }
 
 <div class="mainDiv container py-4">
+    <h1 class="page-seo-title">BlazBlue Centralfiction Rankings</h1>
+    <p class="page-seo-lead">BB Elo, player ratings, and ranked stats for BlazBlue Centralfiction.</p>
     <section id="featured-players-section" class="featured-players-section mb-4" hidden>
         <div class="secondLevelDiv">
             <h2 class="featured-players-title">Featured Players</h2>

@@ -1,7 +1,8 @@
 @page "/Statistics/{character?}"
 @model BBStats.Pages.Statistics.IndexModel
 @{
-    ViewData["Title"] = $"{Model.Stats.DisplayName} Statistics";
+    ViewData["Title"] = $"{Model.Stats.DisplayName} Stats — BlazBlue Centralfiction";
+    ViewData["Description"] = $"{Model.Stats.DisplayName} usage, winrate, and matchup stats for BlazBlue Centralfiction.";
 }
 
 <div class="mainDiv container mb-3">

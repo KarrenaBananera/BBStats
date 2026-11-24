@@ -128,6 +128,43 @@ app.UseAuthorization();
 
 app.UseOutputCache();
 app.MapRazorPages();
+app.MapGet("/robots.txt", (HttpRequest request) =>
+{
+	var origin = $"{request.Scheme}://{request.Host}";
+	var text = $"""
+		User-agent: *
+		Allow: /
+		Disallow: /Admin
+		Disallow: /Home
+		Disallow: /Error
+		Disallow: /*?handler=
+
+		Sitemap: {origin}/sitemap.xml
+		""";
+	return Results.Text(text, "text/plain");
+});
+app.MapGet("/sitemap.xml", (HttpRequest request) =>
+{
+	var origin = $"{request.Scheme}://{request.Host}";
+	var paths = new List<string> { "/", "/AllTime", "/About", "/Search" };
+	foreach (var character in BBStats.Data.CharactersSeed.All)
+	{
+		var slug = character.Name.ToLowerInvariant();
+		paths.Add($"/Characters/{slug}");
+		paths.Add($"/AllTimeCharacters/{slug}");
+		paths.Add($"/Statistics/{slug}");
+	}
+
+	var urls = string.Join("\n", paths.Select(path =>
+		$"  <url><loc>{origin}{path}</loc></url>"));
+	var xml = $"""
+		<?xml version="1.0" encoding="UTF-8"?>
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+		{urls}
+		</urlset>
+		""";
+	return Results.Text(xml, "application/xml");
+});
 
 app.Run();
 

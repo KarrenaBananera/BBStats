@@ -1,10 +1,14 @@
 @page "/Characters/{character?}"
 @model BBStats.Pages.Characters.IndexModel
 @{
-    ViewData["Title"] = $"{Model.CharacterDisplayName} Top";
+    var pageSuffix = Model.Top.PageNumber > 1 ? $" — Page {Model.Top.PageNumber}" : "";
+    ViewData["Title"] = $"{Model.CharacterDisplayName} Elo — BlazBlue Centralfiction Rankings{pageSuffix}";
+    ViewData["Description"] = $"Current {Model.CharacterDisplayName} BB rating and ranked leaderboard for BlazBlue Centralfiction.";
 }
 
 <div class="mainDiv container py-4">
+    <h1 class="page-seo-title">@Model.CharacterDisplayName rankings</h1>
+    <p class="page-seo-lead">Ranked @Model.CharacterDisplayName players by current BlazBlue Centralfiction Elo.</p>
     @{
         ViewData["PreviousPageUrl"] = Model.Top.HasPreviousPage
             ? Model.GetPageUrl(Model.Top.PageNumber - 1)

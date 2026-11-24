@@ -93,12 +93,16 @@
             }
 
         </ul>
-        <form class="col-12 col-sm-6 col-lg-auto mb-3 mb-lg-0" asp-page="/Search/Index" method="get" role="search">
-            <input type="search"
-                   name="q"
-                   class="form-control form-control-dark text-bg-dark"
-                   placeholder="Search player..."
-                   aria-label="Search" />
+        <form class="header-search mb-3 mb-lg-0" asp-page="/Search/Index" method="get" role="search" novalidate>
+            <label class="header-search-field">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input type="search"
+                       name="q"
+                       class="header-search-input"
+                       placeholder="Search player"
+                       aria-label="Search player"
+                       required />
+            </label>
         </form>
     </nav>
 </header>

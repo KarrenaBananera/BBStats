@@ -1,7 +1,24 @@
 @page "/player/{steamId}/{character}/{matchPage?}"
 @model BBStats.Pages.Player.IndexModel
+@using BBStats.Services.Implementation
 @{
-    ViewData["Title"] = $"{Model.Profile.PlayerName} — {Model.Profile.CharacterDisplayName}";
+    var profile = Model.Profile;
+    var games = profile.Wins + profile.Losses;
+    ViewData["Title"] = $"{profile.PlayerName} — {profile.CharacterDisplayName} BB Elo";
+    ViewData["Description"] = $"{profile.PlayerName}'s {profile.CharacterDisplayName} rating, rank, and matches in BlazBlue Centralfiction.";
+    ViewData["CanonicalPath"] = $"/player/{profile.SteamId}/{profile.CharacterSlug}";
+    ViewData["OgTitle"] = string.IsNullOrWhiteSpace(profile.CharacterDisplayName)
+        ? profile.PlayerName
+        : $"{profile.PlayerName} — {profile.CharacterDisplayName}";
+    ViewData["OgDescription"] = $"{profile.Rating} Elo · {games} games · {profile.Wins} wins";
+    if (!string.IsNullOrWhiteSpace(profile.CharacterDisplayName))
+    {
+        ViewData["OgImage"] = CharacterImages.GetStatsIconUrl(profile.CharacterDisplayName);
+    }
+    if (profile.IsIgnored)
+    {
+        ViewData["Robots"] = "noindex, nofollow";
+    }
 }
 
 <div class="mainDiv container py-4">
@@ -41,6 +58,7 @@
         <div class="col-12">
             <div class="secondLevelDiv">
                 <h2 class="profile-matches-title">Matches</h2>
+                <partial name="Profile/_MatchFilters" model="Model.Profile" />
 
                 <div id="matches-container">
                     <partial name="Profile/_MatchesSection" model="Model.Profile" />

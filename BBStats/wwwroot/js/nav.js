@@ -49,4 +49,18 @@
 
         closeAllDropdowns();
     });
+
+    document.querySelectorAll('form.header-search').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            var input = form.querySelector('input[name="q"]');
+            if (!input) {
+                return;
+            }
+
+            input.value = input.value.trim();
+            if (!input.value) {
+                event.preventDefault();
+            }
+        });
+    });
 })();

@@ -9,7 +9,10 @@ using BBStats.Services.Interfaces;
 
 namespace BBStats.Pages.Player;
 
-[OutputCache(Duration = 180, VaryByRouteValueNames = ["steamId", "character", "matchPage"])]
+[OutputCache(
+	Duration = 180,
+	VaryByRouteValueNames = ["steamId", "character", "matchPage"],
+	VaryByQueryKeys = ["handler", "minElo", "maxElo", "opponent", "opponentCharacter"])]
 public class IndexModel : PageModel
 {
 	private readonly AppDbContext _dbContext;
@@ -32,12 +35,7 @@ public class IndexModel : PageModel
 	await _dbContext.SaveChangesAsync();
 
 
-    return RedirectToPage(new
-    {
-        steamId = id,
-        character = Character,
-        matchPage = MatchPage
-    });
+    return RedirectToPage(ProfileRoute(Character, CurrentMatchPage));
 }
 
     public async Task<IActionResult> OnPostIgnorePlayerAsync(Int64 id)
@@ -64,7 +62,7 @@ public class IndexModel : PageModel
             await _dbContext.SaveChangesAsync();
         }
         
-        return RedirectToPage();
+        return RedirectToPage(ProfileRoute(Character, CurrentMatchPage));
     }
 
 	public IndexModel(IPlayerProfileService playerProfileService, AppDbContext dbContext)
@@ -84,6 +82,43 @@ public class IndexModel : PageModel
 	[BindProperty(SupportsGet = true)]
 	public int? MatchPage { get; set; }
 
+	[BindProperty(SupportsGet = true)]
+	public int? MinElo { get; set; }
+
+	[BindProperty(SupportsGet = true)]
+	public int? MaxElo { get; set; }
+
+	[BindProperty(SupportsGet = true)]
+	public string? Opponent { get; set; }
+
+	[BindProperty(SupportsGet = true)]
+	public string? OpponentCharacter { get; set; }
+
+	private int? CurrentMatchPage => MatchPage is null or < 1 ? null : MatchPage;
+
+	private MatchSeriesFilter CurrentSeriesFilter() => new()
+	{
+		MinOpponentElo = MinElo,
+		MaxOpponentElo = MaxElo,
+		OpponentName = Opponent,
+		OpponentCharacterSlug = OpponentCharacter
+	};
+
+	private object ProfileRoute(string? character, int? matchPage)
+	{
+		var filter = CurrentSeriesFilter().Normalize();
+		return new
+		{
+			steamId = SteamId,
+			character,
+			matchPage,
+			minElo = filter.MinOpponentElo,
+			maxElo = filter.MaxOpponentElo,
+			opponent = filter.OpponentName,
+			opponentCharacter = filter.OpponentCharacterSlug
+		};
+	}
+
 	public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
 	{
 		if (!long.TryParse(SteamId, out var playerId))
@@ -100,11 +135,12 @@ public class IndexModel : PageModel
 			Character,
 			page,
 			includeIgnored,
+			CurrentSeriesFilter(),
 			cancellationToken);
 
 		if (result.RedirectCharacterSlug is not null)
 		{
-			return RedirectToPage(new { steamId = SteamId, character = result.RedirectCharacterSlug, matchPage = (int?)null });
+			return RedirectToPage(ProfileRoute(result.RedirectCharacterSlug, null));
 		}
 
 		if (result.Profile is null)
@@ -114,12 +150,9 @@ public class IndexModel : PageModel
 
 		if (page > result.Profile.TotalPages && result.Profile.TotalPages > 0)
 		{
-			return RedirectToPage(new
-			{
-				steamId = SteamId,
-				character = result.Profile.CharacterSlug,
-				matchPage = result.Profile.TotalPages <= 1 ? (int?)null : result.Profile.TotalPages
-			});
+			return RedirectToPage(ProfileRoute(
+				result.Profile.CharacterSlug,
+				result.Profile.TotalPages <= 1 ? null : result.Profile.TotalPages));
 		}
 
 		Profile = result.Profile;
@@ -145,6 +178,7 @@ public class IndexModel : PageModel
 			Character,
 			page,
 			true,
+			CurrentSeriesFilter(),
 			cancellationToken);
 
 		if (result.Profile is null)
@@ -152,6 +186,7 @@ public class IndexModel : PageModel
 			return NotFound();
 		}
 
+		Response.Headers["X-Robots-Tag"] = "noindex";
 		return Partial("Profile/_MatchesSection", result.Profile);
 	}
 }

@@ -9,6 +9,7 @@ public interface IPlayerProfileService
 		string characterSlug,
 		int pageNumber,
 		bool includeIgnored,
+		MatchSeriesFilter? seriesFilter = null,
 		CancellationToken cancellationToken = default);
 }
 

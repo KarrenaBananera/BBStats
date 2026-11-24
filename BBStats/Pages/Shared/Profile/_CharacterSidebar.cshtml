@@ -7,6 +7,10 @@
             <a asp-page="/Player/Index"
                asp-route-steamId="@Model.SteamId"
                asp-route-character="@character.Slug"
+               asp-route-minElo="@Model.SeriesFilter.MinOpponentElo"
+               asp-route-maxElo="@Model.SeriesFilter.MaxOpponentElo"
+               asp-route-opponent="@Model.SeriesFilter.OpponentName"
+               asp-route-opponentCharacter="@Model.SeriesFilter.OpponentCharacterSlug"
                class="profile-char-link @(character.IsActive ? "active" : null)">
                 <span class="profile-char-name">
                     <img src="@CharacterImages.GetSmallIconUrl(character.DisplayName)"
