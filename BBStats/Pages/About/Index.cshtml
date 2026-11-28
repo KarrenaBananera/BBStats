@@ -12,6 +12,12 @@
             It tracks BB player Elo, character leaderboards, and match history.
             Ratings use the Glicko-2 algorithm, and match data comes from the BlazBlue Improvement Mod website.
         </p>
+        <p>
+            A player appears on the leaderboard when there is high confidence in their rating:
+            the second number next to their Elo has to be low enough.
+            If they stop playing, that number slowly climbs and they drop off the leaderboard.
+            They still appear in the all-time ratings if they have at least 30 games on that character.
+        </p>
         <p class="mb-0">
             If you have any questions about the site or would like to get in touch,
             you can find me on the BBIM Discord server under the tag <strong>@@bananstr</strong>.

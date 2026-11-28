@@ -12,7 +12,7 @@ namespace BBStats.Pages.Player;
 [OutputCache(
 	Duration = 180,
 	VaryByRouteValueNames = ["steamId", "character", "matchPage"],
-	VaryByQueryKeys = ["handler", "minElo", "maxElo", "opponent", "opponentCharacter"])]
+	VaryByQueryKeys = ["*"])]
 public class IndexModel : PageModel
 {
 	private readonly AppDbContext _dbContext;

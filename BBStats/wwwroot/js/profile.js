@@ -60,15 +60,22 @@
         return params;
     }
 
-    function visibleUrl(params) {
+    function baseMatchesPath() {
         var path = filterForm
             ? filterForm.getAttribute('data-matches-path')
             : window.location.pathname;
-        var page = params.get('matchPage');
-        if (page && page !== '1') {
-            path = path.replace(/\/$/, '') + '/' + page;
-        }
+        path = (path || '').split('?')[0].replace(/\/$/, '');
+        return path.replace(/\/\d+$/, '');
+    }
 
+    function matchesPath(page) {
+        var path = baseMatchesPath();
+        return page > 1 ? path + '/' + page : path;
+    }
+
+    function visibleUrl(params) {
+        var page = Number(params.get('matchPage') || '1');
+        var path = matchesPath(page > 0 ? page : 1);
         var visible = new URLSearchParams(params);
         visible.delete('matchPage');
         var qs = visible.toString();
@@ -100,17 +107,15 @@
     async function loadMatches(page, fallbackUrl, scrollToList) {
         var params = filterParams(page);
         var key = params.toString();
-        if (key === lastQueryKey) {
+        if (key === lastQueryKey && !scrollToList) {
             return;
         }
 
         var seq = ++requestSeq;
         var requestParams = new URLSearchParams(params);
+        requestParams.delete('matchPage');
         requestParams.set('handler', 'Matches');
-        var path = filterForm
-            ? filterForm.getAttribute('data-matches-path')
-            : window.location.pathname;
-        var url = path + '?' + requestParams.toString();
+        var url = matchesPath(page) + '?' + requestParams.toString();
 
         try {
             matchesContainer.style.opacity = '0.5';
@@ -162,15 +167,7 @@
 
         event.preventDefault();
         window.clearTimeout(debounceTimer);
-        var page = pageFromLink(link);
-        var requested = filterParams(page);
-        var previous = new URLSearchParams(lastQueryKey || '');
-        requested.delete('matchPage');
-        previous.delete('matchPage');
-        if (requested.toString() !== previous.toString()) {
-            page = 1;
-        }
-        loadMatches(page, visibleUrl(filterParams(page)), true);
+        loadMatches(pageFromLink(link), link.href, true);
     });
 
     if (!filterForm) {
